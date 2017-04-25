@@ -31,8 +31,7 @@
     "reexport": "npm run gulp reexport",
     "build": "npm run gulp build",
     "publish": "npm run gulp publish",
-    "nyc:mocha": "nyc mocha test/**/*.ts --timeout 10000",
-    "test": "npm run clean && npm run nyc:mocha"
+    "test": "nyc mocha test/**/*.ts --timeout 10000"
   },
   "devDependencies": {
     "@types/chai": "^3.5.1",

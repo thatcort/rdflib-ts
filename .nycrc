@@ -9,6 +9,8 @@
     "exclude": [
       "node_modules",
       "test",
+      "lib",
+      "compiled",
       "src/main.ts"
     ],
     "reporter": [

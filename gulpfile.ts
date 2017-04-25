@@ -84,11 +84,3 @@ gulp.task('reexport', done => {
 gulp.task('build', done => {
     run('lint', 'clean', 'reexport-source', 'compile-lib', 'clean-index', 'compile',  done);
 });
-
-gulp.task('npm-publish', done => {
-  childProcess.spawn('npm', ['publish', 'lib'], { stdio: 'inherit' }).on('close', done);
-});
-
-gulp.task('publish', done => {
-    run('build', 'npm-publish', done);
-});

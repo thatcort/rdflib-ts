@@ -7,9 +7,16 @@ image: node:6.10.2
 
 pipelines:
   branches:
+    master:
+      -step:
+        script: # Build, test and publish package
+          - npm install
+          - npm run build
+          - npm test
+          - npm publish
     development:
       - step:
-         script: # Modify the commands below to build your repository.
+         script: # Just build and test package
             - npm install
             - npm run build
             - npm test
