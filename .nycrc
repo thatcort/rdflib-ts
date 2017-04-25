@@ -1,0 +1,37 @@
+{
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules",
+      "test",
+      "src/main.ts"
+    ],
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "cache": false,
+    "all": true,
+    "sourceMap": true,
+    "instrument": true,
+    "check-coverage": false,
+    "report-dir": "./coverage",
+    "watermarks": {
+      "lines": [90, 100],
+      "functions": [90, 100],
+      "branches": [90, 100],
+      "statements": [90, 100]
+    }
+}

@@ -1,0 +1,13 @@
+.vscode
+compiled
+node_modules
+src
+test
+.gitignore
+.npmignore
+.nycrc
+cSpell.json
+gulpfile.ts
+mocha.opts
+tsconfig.json
+tslint.json
