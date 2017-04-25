@@ -4,10 +4,12 @@ Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.
 This library is work in progress. Contributions are very welcome. Main goal is to implement in memory rdf store with SPARQL 1.1 support. 
 
 ## Installation
+---
 
 `npm install --save rdflib-ts`
 
 ## Usage
+---
 
 ##### RDF Model
 RDFLib.ts contains set of model classes which can be used to represent rdf terms. 
@@ -24,7 +26,6 @@ RDFLib.ts contains set of model classes which can be used to represent rdf terms
 Each rdf term model class (BlankNode, IRI, PlainLiteral, LangLiteral, TypedLiteral) has `value` property and overrides `toSting()` which return RDF formatted value. 
 
 ###### Example 1: Using model classes
----
 ```typescript
 import { NamespaceManagerInstance, BlankNode, IRI, TypedLiteral, LangLiteral, NTriple, NQuad } from 'rdflib-ts';
 
@@ -72,7 +73,6 @@ console.log(quad.toString()); // <http://example.org#Alice> <http://example.org#
 ```
 
 ###### Example 2: Different BlankNode usage scenarios
----
 ```typescript
 import { BlankNode } from 'rdflib-ts';
 
@@ -99,7 +99,6 @@ let invalidBlankNode = new BlankNode('11#.00--'); // Throws FormatError
 ```
 
 ###### Example 3: Different IRI usage scenarios
----
 ```typescript
 import { IRI } from 'rdflib-ts';
 
@@ -135,7 +134,6 @@ let invalid1 = new IRI('#####'); // Throws FormatError
 ```
 
 ###### Example 4: Different literal usage scenarios
----
 ```typescript
 import { PlainLiteral, TypedLiteral, LangLiteral } from 'rdflib-ts';
 
@@ -173,7 +171,6 @@ console.log(implicitLang.toString()); // "This is lang literal"@en
 ```
 
 ###### Example 5: Different NTriple/NQuad usage scenarios
----
 ```typescript
 import { NamespaceManagerInstance, NQuad } from 'rdflib-ts';
 
@@ -201,7 +198,6 @@ console.log(quad.toString()); // _:b1 <http://example.org#knows> _:b2 .
 RDFLib.ts provides `RdfIOManager` class which can be used to parse or serialize RDF data. Currently supported formats are Turtle family formats (.nt, .nq, ttl, trig, n3) which are handled with https://github.com/RubenVerborgh/N3.js library, and JsonLD format handled with https://github.com/digitalbazaar/jsonld.js/ library. Support for RDF/XML will be added later. If you need to handle custom format, appropriate parser/serializer can be registered using `RdfIOManager.registerParser(extension: string, parser: IRdfDocumentParser)` and `RdfIOManager.registerSerializer(extension: string, serializer: IRdfDataSerializer)` methods. If target format is supported, parsing and serialization can be done using `RdfIOManager.parseDocumentAsync(filePath: string, quadHandler?: (quad: NQuad) => void)` and `RdfIOManager.serializeAsync(quads: NQuad[], outFilePath: string)` methods. Both methods are asynchronous and promise based. `quadHandler?: (quad: NQuad) => void` is optional callback function which (if provided), gets called after each parsed quad.  
 
 ###### Example 1: Parsing and serializing with different formats
----
 ```typescript
 import { RdfIOManager, NQuad } from 'rdflib-ts';
 
@@ -225,7 +221,6 @@ try {
 For now only `RemoteSparqlEndpoint` version is implemented. As already pointed out, main goal is to implement `InMemoryRdfStore` version. `RemoteSparqlEndpoint` just a proxy to remote SPARQL endpoint which can be queried using SPARQL 1.1 query language. It uses https://github.com/eddieantonio/node-sparql-client library to send SPARQL queries over http to target RDF store. RDF store can be used to import /export quads. If you want to import whole document, or export quads from store to document, you can use `RdfDataImporter` and `RdfDataExporter` classes.
 
 ###### Example 1: RemoteSparqlEndpoint usage
----
 ```typescript
 import { NQuad, RemoteSparqlEndpoint } from 'rdflib-ts';
 
@@ -257,7 +252,6 @@ try {
 ```
 
 ###### Example 2: RdfDataExporter and RdfDataImporter usage
----
 ```typescript
 import { NQuad, RemoteSparqlEndpoint, RdfDataExporter, RdfDocumentImporter } from 'rdflib-ts';
 
@@ -329,7 +323,6 @@ Error message consists of error name followed by concatenated (dot separated) er
 * NotSupportedError
 
 ###### Example 1: Simple try catch
----
 ```typescript
 import { FormatError } from 'rdflib-ts';
 
@@ -341,7 +334,6 @@ try {
 ```
 
 ###### Example 2: Rethrowing error
----
 ```typescript
 import { FormatError, InvalidOperationError } from 'rdflib-ts';
 
@@ -361,6 +353,7 @@ try {
 ```
 
 ## Development
+---
 
 Want to contribute? Great!
 If you are using Visual Studio Code, there is default development setup in `.vscode` folder. There are configured tasks for compile, test and build, and default launch configuration with `main.ts` as entry point, and compile as pre launch task. Be aware that working directory when debugging is not project root, it it `compiled` directory (directory where compiled .js files reside).
@@ -369,6 +362,7 @@ After cloning code, run `npm install` to install dependencies, then run `npm run
 To run tests, run `npm test` command.
 
 ## Todos
+---
 
  - Implement in memory RDF store with SPARQL 1.1 support
  - Add support for RDF/XML serialization format
