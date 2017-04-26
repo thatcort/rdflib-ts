@@ -1,8 +1,8 @@
 {
-    "lines": 90,
-    "statements": 90,
-    "functions": 90,
-    "branches": 90,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
     "include": [
       "src/**/*.ts"
     ],
@@ -28,7 +28,7 @@
     "all": true,
     "sourceMap": true,
     "instrument": true,
-    "check-coverage": false,
+    "check-coverage": true,
     "report-dir": "./coverage",
     "watermarks": {
       "lines": [90, 100],
