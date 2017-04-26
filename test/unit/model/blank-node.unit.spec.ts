@@ -40,6 +40,11 @@ describe('BlankNode - Unit', () => {
 			blankNode.value = 'b1';
 			expect(blankNode.value).to.equal('b1');
 		});
+
+		it('should remove _: from beginning of blank node value', () => {
+			blankNode.value = '_:b1';
+			expect(blankNode.value).to.equal('b1');
+		});
 	});
 
 	context('toString', () => {
