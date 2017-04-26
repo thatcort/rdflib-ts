@@ -8,11 +8,14 @@ describe('LangLiteral - Unit', () => {
 
 	context('constructor', () => {
 		it('should set literal value and language properties', () => {
-			langLiteral = new LangLiteral('Lang literal value');
-			expect(langLiteral.value).to.equal('Lang literal value');
-
 			langLiteral = new LangLiteral('English lang literal', 'en');
 			expect(langLiteral.value).to.equal('English lang literal');
+			expect(langLiteral.language).to.equal('en');
+		});
+
+		it('should set English as default language', () => {
+			langLiteral = new LangLiteral('Lang literal value');
+			expect(langLiteral.value).to.equal('Lang literal value');
 			expect(langLiteral.language).to.equal('en');
 		});
 	});
