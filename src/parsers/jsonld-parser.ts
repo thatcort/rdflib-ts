@@ -1,3 +1,4 @@
+import { ArgumentError } from '../errors/argument-error';
 import { RdfFactory } from '../utils/rdf/rdf-factory';
 import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { PlainLiteral } from '../model/plain-literal';
@@ -20,6 +21,10 @@ export class JsonLDParser extends RdfDocumentParser {
 		return new Promise<NQuad[]>(async (resolve, reject) => {
 			let parsedQuads: NQuad[] = [];
 						
+			if (!document) {
+				return reject(new ArgumentError('Document can not be null, undefined or empty string'));
+			}
+
 			try {
 				let originType = this.resolveOriginType(document);
 				let jsonldDocument: any = await this.resolveDocumentContentAsync(document, originType);
@@ -56,7 +61,7 @@ export class JsonLDParser extends RdfDocumentParser {
 	}
 
 	private resolveDocumentContentAsync(document: string | ReadStream, documentOriginType?: RdfDocumentOriginType): Promise<any> {
-		return new Promise<string>((resolve, reject) => {
+		return new Promise<string>(async (resolve, reject) => {
 			try {
 				switch (documentOriginType.valueOf()) {
 					case RdfDocumentOriginType.LocalFile: {
@@ -67,11 +72,8 @@ export class JsonLDParser extends RdfDocumentParser {
 						break;
 					}
 					case RdfDocumentOriginType.ReadableStream: {
-						streamToStream(<ReadStream>document, (err, documentContent) => {
-							return err ? reject(err) : resolve(JSON.parse(documentContent));
-						});
-
-						break;
+						let documentContent = await streamToStream(<ReadStream>document);
+						return resolve(JSON.parse(documentContent));
 					}
 					case RdfDocumentOriginType.RemoteFile: {
 						http.get(<string>document, (err, response) => {

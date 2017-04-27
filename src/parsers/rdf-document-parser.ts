@@ -26,7 +26,7 @@ export abstract class RdfDocumentParser implements IRdfDocumentParser {
 	protected resolveOriginType(document: string | ReadStream): RdfDocumentOriginType {
 		if (typeof document !== 'string') {
 			return RdfDocumentOriginType.ReadableStream;
-		} else if (RdfUtils.isUrl(document)) {
+		} else if (document.startsWith('http://')) {
 			return RdfDocumentOriginType.RemoteFile;
 		} else if (RdfUtils.isLocalFilePath(document)) {
 			return RdfDocumentOriginType.LocalFile;

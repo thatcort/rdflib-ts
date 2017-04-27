@@ -87,13 +87,19 @@ describe('JsonLDDocumentParser - Integration', () => {
 		expect(handlerSpy.callCount).to.be.equal(10);
 	});
 
-	it('should reject if invalid input provided (file does not exist, remote file does not exist', () => {
+	it('should reject if invalid input provided (file does not exist, remote file does not exist, invalid json format', () => {
 		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3053/unknownfile.json');
 		let testCase2Promise = parser.parseDocumentAsync('test/datasets/jsonld/unknownfile.json');
+		let testCase3Promise = parser.parseDocumentAsync(fs.createReadStream('non existing file'));
+		let testCase4Promise = parser.parseDocumentAsync('rdf": "http:\\www.w3.org\\1999\\02\\22-rdf-syntax-ns#",\r\n    "rdfs');
+		let testCase5Promise = parser.parseDocumentAsync(null);
 
 		return Promise.all([
 			expect(testCase1Promise).to.be.rejected,
-			expect(testCase2Promise).to.be.rejected
+			expect(testCase2Promise).to.be.rejected,
+			expect(testCase3Promise).to.be.rejected,
+			expect(testCase4Promise).to.be.rejected,
+			expect(testCase5Promise).to.be.rejected
 		]);
 	});
 });

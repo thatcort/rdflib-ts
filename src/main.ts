@@ -1,3 +1,4 @@
+import { ReadStream } from 'tty';
 import * as path from 'path';
 import { RdfDocumentOriginType } from './parsers/rdf-document-parser';
 import * as fs from 'fs';
@@ -9,18 +10,18 @@ import { NamespaceManager } from './utils/rdf/namespace-manager';
 
 (async () => {
 	// Write code to debug
-	// let parser = new JsonLDParser();
+	let parser = new JsonLDParser();
 
-	// try {
-	// 	let stream = fs.readFileSync('test/datasets/jsonld/jsonldparser_testcase1_10quads.json', 'utf-8');
-	// 	let quads = await parser.parseDocumentAsync(stream);
+	try {
 		
-	// 	let a = 5;
-	// } catch (error) {
-	// 	console.log(error.message);
-	// }
+		let stream = fs.createReadStream('kdfjkjk');
+		let quads = await (<any>parser).resolveDocumentContentAsync(stream, RdfDocumentOriginType.ReadableStream);
+		
+		let a = 5;
+	} catch (error) {
+		console.log(error.message);
+	}
 
-	// console.log(path.delimiter);
 	
 	process.exit();
 })();
