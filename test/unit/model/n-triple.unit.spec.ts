@@ -190,6 +190,6 @@ describe('NTriple - Unit', () => {
 		it('should return space separated subject, predicate and object with dot at the and', () => {
 			triple = new NTriple('b1', 'http://example.org#knows', 'b2');
 			expect(triple.toString()).to.equal('_:b1 <http://example.org#knows> _:b2 .');
-		})
+		});
 	});
 });

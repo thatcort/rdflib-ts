@@ -106,7 +106,7 @@ export class NTriple {
 	private resolvePredicate(value: string | RdfPredicate | ISparqlQueryResultBinding): RdfPredicate {
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'uri') {
-				throw new InvalidOperationError('Rdf must be uri');
+				throw new InvalidOperationError('Rdf predicate must be uri');
 			}
 
 			return new IRI(value.value);
@@ -116,7 +116,7 @@ export class NTriple {
 			if (RdfUtils.isIRI(value)) {
 				return new IRI(value);
 			} else {
-				throw new InvalidOperationError('Rdf must be uri');
+				throw new InvalidOperationError('Rdf predicate must be uri');
 			} 
 		}
 
