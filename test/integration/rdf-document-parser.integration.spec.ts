@@ -1,4 +1,4 @@
-import { RdfDocumentOriginType } from '../../src/parsers/rdf-document-parser';
+
 import * as fs from 'fs';
 import { JsonLDParser } from '../../src/parsers/jsonld-parser';
 import 'mocha';

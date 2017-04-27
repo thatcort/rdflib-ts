@@ -8,27 +8,21 @@ import { ReadStream } from 'fs';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
 import * as fs from 'fs';
 import * as jsonld from 'jsonld';
-import * as streamToStream from 'stream-to-string';
+import * as streamToString from 'stream-to-string';
 import * as http from 'superagent';
 
 import { NQuad } from '../model/n-quad';
-import { RdfDocumentParser, RdfDocumentOriginType } from './rdf-document-parser';
+import { RdfDocumentParser } from './rdf-document-parser';
 import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
 
 export class JsonLDParser extends RdfDocumentParser {
 
-	public parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+	public parseStringAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
 		return new Promise<NQuad[]>(async (resolve, reject) => {
 			let parsedQuads: NQuad[] = [];
-						
-			if (!document) {
-				return reject(new ArgumentError('Document can not be null, undefined or empty string'));
-			}
 
 			try {
-				let originType = this.resolveOriginType(document);
-				let jsonldDocument: any = await this.resolveDocumentContentAsync(document, originType);
-
+				let jsonldDocument: any = JSON.parse(document);
 				let context = jsonldDocument['@context'];
 
 				if (context) {
@@ -43,7 +37,7 @@ export class JsonLDParser extends RdfDocumentParser {
 					let triples = dataset[graph];
 
 					for (let triple of triples) {
-						let object = triple.object.type === 'literal' ? RdfFactory.createLiteral(triple.object.value, triple.object.language,  triple.object.datatype) : triple.object.value;
+						let object = triple.object.type === 'literal' ? RdfFactory.createLiteral(triple.object.value, triple.object.language, triple.object.datatype) : triple.object.value;
 						let nQuad = new NQuad(triple.subject.value, triple.predicate.value, object, graph !== '@default' ? graph : undefined);
 
 						parsedQuads.push(nQuad);
@@ -54,41 +48,47 @@ export class JsonLDParser extends RdfDocumentParser {
 				}
 
 				resolve(parsedQuads);
-			} catch (err) {
-				reject(err);
+			} catch (error) {
+				reject(error);
 			}
 		});
 	}
 
-	private resolveDocumentContentAsync(document: string | ReadStream, documentOriginType?: RdfDocumentOriginType): Promise<any> {
-		return new Promise<string>(async (resolve, reject) => {
+	public parseReadableStreamAsync(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+		return new Promise<NQuad[]>(async (resolve, reject) => {
 			try {
-				switch (documentOriginType.valueOf()) {
-					case RdfDocumentOriginType.LocalFile: {
-						fs.readFile(<string>document, 'utf-8', (err, documentContent) => {
-							return err ? reject(err) : resolve(JSON.parse(documentContent));
-						});
-
-						break;
-					}
-					case RdfDocumentOriginType.ReadableStream: {
-						let documentContent = await streamToStream(<ReadStream>document);
-						return resolve(JSON.parse(documentContent));
-					}
-					case RdfDocumentOriginType.RemoteFile: {
-						http.get(<string>document, (err, response) => {
-							return err ? reject(err) : resolve(response.body);
-						});
-
-						break;
-					}
-					case RdfDocumentOriginType.String: {
-						return resolve(JSON.parse(<string>document));
-					}
-				}
+				let documentContent = await streamToString(<ReadStream>document);
+				let quads = this.parseStringAsync(documentContent, quadHandler);
+				resolve(quads);
 			} catch (error) {
 				reject(error);
 			}
+		});
+	}
+
+	public parseLocalFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+		return new Promise<NQuad[]>(async (resolve, reject) => {
+			fs.readFile(document, 'utf-8', async (err, documentContent) => {
+				if (err) {
+					return reject(err);
+				}
+
+				let quads = await this.parseStringAsync(documentContent, quadHandler);
+				resolve(quads);
+			});
+		});
+	}
+
+	public parseRemoteFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+		return new Promise<NQuad[]>(async (resolve, reject) => {
+			http.get(document, async (err, response) => {
+				if (err) {
+					return reject(err);
+				}
+
+				let quads = await this.parseStringAsync(JSON.stringify(response.body), quadHandler);
+				resolve(quads);
+			});
 		});
 	}
 }
