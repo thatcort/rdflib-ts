@@ -1,7 +1,12 @@
+# Docker container with nodejs environment and Apache Jena Fuseki server
+# To build image run: docker build -t node-fuseki .
+# To remove current instance run: docker rm node_fuseki_instance -f
+# To Run container run: docker run -p 3030:3030 -p 3031:3031 -p 3032:3032 --name node_fuseki_instance -t node-fuseki
+
 FROM openjdk:latest
 MAINTAINER Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>
 
-#Install latest NodeJS
+# Install latest NodeJS
 
 RUN apt-get update
 RUN apt-get install curl
@@ -11,7 +16,7 @@ RUN apt-get install nodejs
 RUN node --version
 RUN npm --version
 
-#Install Fuseki
+# Install Fuseki
 
 ENV FUSEKI_HOME /home/fuseki
 ENV FUSEKI_VERSION 2.5.0
@@ -27,7 +32,11 @@ RUN     wget -O fuseki.tar.gz $FUSEKI_MIRROR/jena/binaries/apache-jena-fuseki-$F
         cd $FUSEKI_HOME && rm -rf fuseki.war
 
 		
-#Expose port and set entry point
-EXPOSE 3030
-ENTRYPOINT ["/home/fuseki/fuseki-server"]
+# Expose ports for server instances
+EXPOSE 3030 3031 3032
+
+# Run 3 server instances on diferent ports
+CMD ["/home/fuseki/fuseki-server", "--port", "3030", "--mem", "/TestStore"]
+CMD ["/home/fuseki/fuseki-server", "--port", "3031", "--mem", "/TestStore"]
+CMD ["/home/fuseki/fuseki-server", "--port", "3032", "--mem", "/TestStore"]
 
