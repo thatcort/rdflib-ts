@@ -1,6 +1,6 @@
 
 import * as fs from 'fs';
-import { JsonLDParser } from '../../src/parsers/jsonld-parser';
+import { JsonLDParser } from '../../../src/parsers/jsonld-parser';
 import 'mocha';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as chai from 'chai';
@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 import { expect } from 'chai';
 
 
-describe('JsonLDDocumentParser - Integration', () => {
+describe('JsonLDParser - Integration', () => {
 	let parser = new JsonLDParser();
 
 	it('should be able to load and parse local jsonld file', () => {
@@ -90,7 +90,7 @@ describe('JsonLDDocumentParser - Integration', () => {
 	it('should reject if invalid input provided (file does not exist, remote file does not exist, invalid json format', () => {
 		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3053/unknownfile.json');
 		let testCase2Promise = parser.parseDocumentAsync('test/datasets/jsonld/unknownfile.json');
-		let testCase3Promise = parser.parseDocumentAsync(fs.createReadStream('non existing file'));
+		let testCase3Promise = parser.parseDocumentAsync(fs.createReadStream('non existing file.json'));
 		let testCase4Promise = parser.parseDocumentAsync('rdf": "http:\\www.w3.org\\1999\\02\\22-rdf-syntax-ns#",\r\n    "rdfs');
 		let testCase5Promise = parser.parseDocumentAsync(null);
 

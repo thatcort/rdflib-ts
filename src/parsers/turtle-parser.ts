@@ -1,96 +1,91 @@
-// import { Readable } from 'stream';
 // import { ArgumentError } from '../errors/argument-error';
-// import { ReadStream } from 'fs';
-// import * as fs from 'fs';
-// import * as n3 from 'N3';
-// import * as path from 'path';
-// import * as http from 'superagent';
+import { RdfFactory } from '../utils/rdf/rdf-factory';
+import { RdfUtils } from '../utils/rdf/rdf-utils';
+import { PlainLiteral } from '../model/plain-literal';
+import { TypedLiteral } from '../model/typed-literal';
+import { LangLiteral } from '../model/lang-literal';
+import { ReadStream } from 'fs';
+import { InvalidOperationError } from '../errors/invalid-operation-error';
+import * as fs from 'fs';
+import * as n3 from 'n3';
+import * as streamToString from 'stream-to-string';
+import * as http from 'superagent';
 
-// import { NQuad } from '../model/n-quad';
-// import { RdfFactory } from '../utils/rdf/rdf-factory';
-// import { IRdfDocumentParser, RdfDocumentOriginType, RdfDocumentParser } from './rdf-document-parser';
-// import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
+import { NQuad } from '../model/n-quad';
+import { RdfDocumentParser } from './rdf-document-parser';
+import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
 
-// export class TurtleParser extends RdfDocumentParser {
+export class TurtleParser extends RdfDocumentParser {
 
-//     public parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-//         return new Promise<NQuad[]>((resolve, reject) => {
-//             let parsedQuads: NQuad[] = [];
+    public parseStringAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+        return new Promise<NQuad[]>((resolve, reject) => {
+            let parsedQuads: NQuad[] = [];
+            let parser = new n3.Parser();
 
-//             if (!document) {
-//                 return reject(new ArgumentError('Document can not be null, undefined or empty string'));
-//             }
+            parser.parse(document, (err, triple, prefixes) => {
+                if (err) {
+                    return reject(err);
+                }
 
-//             try {
-//                 let originType = this.resolveOriginType(document);
-//                 let n3ParserOptions = undefined;
+                if (prefixes) {
+                    for (let prefix in prefixes) {
+                        NamespaceManagerInstance.registerNamespace(prefix, prefixes[prefix]);
+                    }
+                }
 
-//                 if (originType === RdfDocumentOriginType.LocalFile && path.extname(<string>document) === '.n3') {
-//                     n3ParserOptions = { format: 'N3' };
-//                 }
+                if (!triple) {
+                    return resolve(parsedQuads);
+                }
 
-//                 let documentStream = await this.resolveDocumentStreamAsync(document, originType);
+                let quad = new NQuad(triple.subject, triple.predicate, triple.object, triple.graph);
+                parsedQuads.push(quad);
+                if (quadHandler) {
+                    quadHandler(quad);
+                }
+            });
 
+        });
+    }
 
+    public parseReadableStreamAsync(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+        return new Promise<NQuad[]>(async (resolve, reject) => {
+            let parsedQuads: NQuad[] = [];
+            let parser = new n3.Parser();
 
-//                 parser.parse(fs.createReadStream(filePath), (err, triple, prefixes) => {
-//                     if (err) {
-//                         return reject(err);
-//                     }
+            try {
+                let documentContent = await streamToString(<ReadStream>document);
+                let quads = this.parseStringAsync(documentContent, quadHandler);
+                resolve(quads);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 
-//                     if (prefixes) {
-//                         for (let prefix in prefixes) {
-//                             NamespaceManagerInstance.registerNamespace(prefix, prefixes[prefix]);
-//                         }
-//                     }
+    public parseLocalFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+        return new Promise<NQuad[]>(async (resolve, reject) => {
+            // try {
+                let stream = fs.createReadStream(document);
+                let quads = await this.parseReadableStreamAsync(stream, quadHandler);
+                resolve(quads);
+            // } catch (err) {
+                // reject(err);
+            // }
+        });
 
-//                     if (!triple) {
-//                         return resolve(parsedQuads);
-//                     }
+    }
 
-//                     let quad = new NQuad(triple.subject, triple.predicate, triple.object, triple.graph);
-//                     parsedQuads.push(quad);
-//                     if (quadHandler) {
-//                         quadHandler(quad);
-//                     }
-//                 });
-//             } catch (err) {
-//                 reject(err);
-//             }
-//         });
-//     }
+    public parseRemoteFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+        return new Promise<NQuad[]>(async (resolve, reject) => {
+            http.get(document, async (err, response) => {
+                if (err) {
+                    return reject(err);
+                }
 
-//     private resolveDocumentStreamAsync(document: string | ReadStream, documentOriginType?: RdfDocumentOriginType): Promise<ReadStream> {
-// 		return new Promise<ReadStream>(async (resolve, reject) => {
-// 			try {
-// 				switch (documentOriginType.valueOf()) {
-// 					case RdfDocumentOriginType.LocalFile: {
-// 						return resolve(fs.createReadStream(<string>document));
-// 					}
-// 					case RdfDocumentOriginType.ReadableStream: {
-// 						return resolve(<ReadStream>document);
-// 					}
-// 					case RdfDocumentOriginType.RemoteFile: {
-// 						http.get(<string>document, (err, response) => {
-//                             if (err) {
-//                                 return reject(err);
-//                             }
-
-//                             let stream = new Readable();
-//                             stream.push(JSON.stringify(response.body));
-//                             stream.push(null);
-// 							return err ? reject(err) : resolve(stream);
-// 						});
-
-// 						break;
-// 					}
-// 					case RdfDocumentOriginType.String: {
-// 						return resolve(JSON.parse(<string>document));
-// 					}
-// 				}
-// 			} catch (error) {
-// 				reject(error);
-// 			}
-// 		});
-// 	}
-// }
+                let documentContent = await streamToString(response);
+                let quads = await this.parseStringAsync(documentContent, quadHandler);
+                resolve(quads);
+            });
+        });
+    }
+}
