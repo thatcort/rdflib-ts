@@ -24,7 +24,7 @@
     "extension": [
       ".ts"
     ],
-    "cache": false,
+    "cache": true,
     "all": true,
     "sourceMap": true,
     "instrument": true,
