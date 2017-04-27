@@ -257,4 +257,17 @@ describe('RdfUtils - Unit', () => {
 			expect(RdfUtils.escapeLiteral('^\\\\d{3}-\\\\d{2}-\\\\d{4}$')).to.equal('^\\\\d{3}-\\\\d{2}-\\\\d{4}$');
 		});
 	});
+
+	context('isSparqlResultBinding', () => {
+		it('should return false for objects not implementing ISparqlQueryResultBinding interface', () => {
+			expect(RdfUtils.isSparqlResultBinding({})).to.be.false;
+			expect(RdfUtils.isSparqlResultBinding('string value')).to.be.false;
+			expect(RdfUtils.isSparqlResultBinding({ type: 'incomplete binding value' })).to.be.false;
+			expect(RdfUtils.isSparqlResultBinding({ type: 'uri', value: 1 })).to.be.false;
+		});
+
+		it('should return true for objects implementing ISparqlQueryResultBinding interface', () => {
+			expect(RdfUtils.isSparqlResultBinding({ type: 'uri', value: 'some value' })).to.be.true;
+		});
+	});
 });

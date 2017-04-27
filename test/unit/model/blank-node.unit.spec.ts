@@ -1,3 +1,4 @@
+import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
 import 'mocha';
 import { expect } from 'chai';
 
@@ -12,6 +13,9 @@ describe('BlankNode - Unit', () => {
 		it('should set blank node value', () => {
 			blankNode = new BlankNode('b1');
 			expect(blankNode.value).to.equal('b1');
+
+			blankNode = new BlankNode({ type: 'bnode', value: 'b1' });
+			expect(blankNode.value).to.equal('b1');
 		});
 
 		it('should generate value in form of b plus auto increment if not provided', () => {
@@ -22,6 +26,10 @@ describe('BlankNode - Unit', () => {
 			let blankNode2Id = parseInt(blankNode2.value.replace('b', ''));
 
 			expect(blankNode1Id).to.equal(blankNode2Id - 1);
+		});
+
+		it('should throw InvalidOperationError if sparql query result binding provided and its type is not bnode', () => {
+			expect(() => new BlankNode({ type: 'uri', value: 'b1' })).to.throw(InvalidOperationError);
 		});
 	});
 

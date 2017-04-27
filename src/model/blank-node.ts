@@ -1,14 +1,15 @@
+import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { ArgumentError } from '../errors/argument-error';
 import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { FormatError } from '../errors/format-error';
+import { ISparqlQueryResultBinding } from './sparql-query-result';
 
 export class BlankNode {
 	private static _blankNodeCounter: number = 0;
 	private _value: string;
 
-	public constructor(value?: string) {
-		value = value || `b${BlankNode._blankNodeCounter++}`;
-		this.value = value;
+	public constructor(value?: string | ISparqlQueryResultBinding) {				
+		this.value = this.resolveBlankNodeValue(value);
 	}
 
 	public get value(): string {
@@ -29,5 +30,19 @@ export class BlankNode {
 
 	public toString(): string {
 		return `_:${this.value}`;
+	}
+
+	private resolveBlankNodeValue(value?: string | ISparqlQueryResultBinding): string {
+		if (!value) {
+			return `b${BlankNode._blankNodeCounter++}`;
+		} else if (RdfUtils.isSparqlResultBinding(value)) {
+			if (value.type !== 'bnode') {
+				throw new InvalidOperationError(`Can not create blank node from sparql result binding with type: '${value.type}'`);
+			}
+
+			return value.value;
+		}
+
+		return value;
 	}
 }

@@ -1,3 +1,4 @@
+import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
 import { ArgumentError } from '../../../src/errors/argument-error';
 import 'mocha';
 import { expect } from 'chai';
@@ -10,6 +11,15 @@ describe('PlainLiteral - Unit', () => {
 		it('should set literal value', () => {
 			plainLiteral = new PlainLiteral('Plain literal value');
 			expect(plainLiteral.value).to.equal('Plain literal value');
+
+			plainLiteral = new PlainLiteral({ type: 'literal' , value: 'Plain literal value' });
+			expect(plainLiteral.value).to.equal('Plain literal value');
+		});
+
+		it('should throw InvalidOperationError if sparql query result binding provided and its type is literal with xml:lang and datatype specified', () => {
+			expect(() => new PlainLiteral({ type: 'uri', value: 'b1' })).to.throw(InvalidOperationError);
+			expect(() => new PlainLiteral({ type: 'literal', value: 'b1', datatype: 'xsd:string' })).to.throw(InvalidOperationError);
+			expect(() => new PlainLiteral({ type: 'literal', value: 'b1', 'xml:lang': 'en' })).to.throw(InvalidOperationError);
 		});
 	});
 

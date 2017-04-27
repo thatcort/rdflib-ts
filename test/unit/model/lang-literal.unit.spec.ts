@@ -1,3 +1,4 @@
+import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
 import { ArgumentError } from '../../../src/errors/argument-error';
 import 'mocha';
 import { expect } from 'chai';
@@ -11,12 +12,22 @@ describe('LangLiteral - Unit', () => {
 			langLiteral = new LangLiteral('English lang literal', 'en');
 			expect(langLiteral.value).to.equal('English lang literal');
 			expect(langLiteral.language).to.equal('en');
+
+			langLiteral = new LangLiteral({ type: 'literal' , value: 'German lang literal', 'xml:lang': 'de' });
+			expect(langLiteral.value).to.equal('German lang literal');
+			expect(langLiteral.language).to.equal('de');
 		});
 
 		it('should set English as default language', () => {
 			langLiteral = new LangLiteral('Lang literal value');
 			expect(langLiteral.value).to.equal('Lang literal value');
 			expect(langLiteral.language).to.equal('en');
+		});
+
+		it('should throw InvalidOperationError if sparql query result binding provided and its type is literal without xml:lang or with datatype specified', () => {
+			expect(() => new LangLiteral({ type: 'uri', value: 'b1' })).to.throw(InvalidOperationError);
+			expect(() => new LangLiteral({ type: 'literal', value: 'b1', datatype: 'xsd:string' })).to.throw(InvalidOperationError);
+			expect(() => new LangLiteral({ type: 'literal', value: 'b1' })).to.throw(InvalidOperationError);
 		});
 	});
 

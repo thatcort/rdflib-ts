@@ -1,10 +1,13 @@
+import { InvalidOperationError } from '../errors/invalid-operation-error';
+import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { ArgumentError } from '../errors/argument-error';
 import { PlainLiteral } from './plain-literal';
+import { ISparqlQueryResultBinding } from "./sparql-query-result";
 
 export class LangLiteral extends PlainLiteral {
 	private _language: string;
 
-	public constructor(value: string, language?: string) {
+	public constructor(value: string | ISparqlQueryResultBinding, language?: string) {
 		super(value);
 		this.language = language || this.language || 'en';
 	}
@@ -40,5 +43,18 @@ export class LangLiteral extends PlainLiteral {
 	
 	public toString(): string {
 		return `${super.toString()}@${this.language}`;
+	}
+
+	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding): string {
+		if (RdfUtils.isSparqlResultBinding(value)) {
+			if (value.type !== 'literal' || !!value.datatype || !value['xml:lang']) {
+				throw new InvalidOperationError(`Can not create lang literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`);
+			}
+
+			this.language = value['xml:lang'];
+			return value.value;
+		}
+
+		return value;
 	}
 }

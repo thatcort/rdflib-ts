@@ -1,3 +1,4 @@
+import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
 import { TypedLiteral } from '../../../src/model/typed-literal';
 import { ArgumentError } from '../../../src/errors/argument-error';
 import 'mocha';
@@ -17,13 +18,27 @@ describe('LangLiteral - Unit', () => {
 			typedLiteral = new TypedLiteral('String typed literal', 'xsd:string');
 			expect(typedLiteral.value).to.equal('String typed literal');
 			expect(typedLiteral.dataType.value).to.equal(XsdStringIRI.value);
+
+			typedLiteral = new TypedLiteral({ type: 'literal' , value: 'String typed literal', datatype: 'xsd:string' });
+			expect(typedLiteral.value).to.equal('String typed literal');
+			expect(typedLiteral.dataType.value).to.equal(XsdStringIRI.value);
+
+			typedLiteral = new TypedLiteral({ type: 'typed-literal' , value: 'String typed literal', datatype: 'xsd:string' });
+			expect(typedLiteral.value).to.equal('String typed literal');
+			expect(typedLiteral.dataType.value).to.equal(XsdStringIRI.value);
 		});
 
 		it('should set xsd:string as default datatype if not provided', () => {
 			typedLiteral = new TypedLiteral('String typed literal');
 			expect(typedLiteral.value).to.equal('String typed literal');
 			expect(typedLiteral.dataType.value).to.equal(XsdStringIRI.value);
-		})
+		});
+
+		it('should throw InvalidOperationError if sparql query result binding provided and its type is literal without datatype or with xml:lang specified', () => {
+			expect(() => new TypedLiteral({ type: 'uri', value: 'b1' })).to.throw(InvalidOperationError);
+			expect(() => new TypedLiteral({ type: 'literal', value: 'b1', 'xml:lang': 'en' })).to.throw(InvalidOperationError);
+			expect(() => new TypedLiteral({ type: 'literal', value: 'b1' })).to.throw(InvalidOperationError);
+		});
 	});
 
 	context('set dataType', () => {

@@ -1,3 +1,5 @@
+import { ISparqlQueryResultBinding } from '../../model/sparql-query-result';
+
 export class RdfUtils {
 
 	public static isUUID(value: string): boolean {
@@ -97,5 +99,11 @@ export class RdfUtils {
 
 	public static escapeLiteral(value: string): string {
 		return value.replace(/((?:\\)*)\\(?!\\\\)/g, '\\\\').replace(/"/g, '\\"');
+	}
+
+	public static isSparqlResultBinding(value: any): value is ISparqlQueryResultBinding {
+		return typeof value !== 'string' && 
+			   'type' in value && (value.type === 'uri' || value.type === 'bnode' || value.type === 'literal' || value.type === 'typed-literal') 
+				&& 'value' in value && typeof value.value === 'string';
 	}
 }

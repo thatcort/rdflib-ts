@@ -5,20 +5,15 @@ import { Namespace } from './namespace';
 import { FormatError } from '../errors/format-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
+import { ISparqlQueryResultBinding } from "./sparql-query-result";
 
 export class IRI {
 	private _value: string;
 	private _relativeValue: string;
 	private _namespace: Namespace;
 
-	public constructor(value: string, namespace?: Namespace) {
-		if (namespace) {
-			this._relativeValue = value;
-			this._namespace = namespace;
-			value = `${namespace.value}${value}`;
-		}
-
-		this.value = value;
+	public constructor(value: string | ISparqlQueryResultBinding, namespace?: Namespace) {
+		this.value = this.resolveAbsoluteValue(value, namespace);
 	}
 
 	public get value(): string {
@@ -41,7 +36,7 @@ export class IRI {
 			this._value = `${namespace.value}${relativeValue}`;
 			this._relativeValue = relativeValue;
 			this._namespace = namespace;
-		} else if (RdfUtils.isUrl(value) || RdfUtils.isUrn(value)) {
+		} else if (RdfUtils.isAbsoluteIRI(value)) {
 			this._value = value.replace(/(^<|>$)/g, '');
 			this.resolveRelativeValue();
 			this.resolveNamespace();
@@ -74,5 +69,23 @@ export class IRI {
 			let relativeValue = this.value.match(/(?!.*(\/#|#|\/)).+/g)[0];
 			this._relativeValue = /\/#/g.test(this.value) ? `#${relativeValue}` : relativeValue;
 		}
+	}
+
+	private resolveAbsoluteValue(value: string | ISparqlQueryResultBinding, namespace?: Namespace): string {
+		if (RdfUtils.isSparqlResultBinding(value)) {
+			if (value.type !== 'uri') {
+				throw new InvalidOperationError(`Can not create IRI from sparql query result binding of type: '${value.type}'`);
+			}
+
+			return value.value;
+		}
+		
+		if (namespace) {
+			this._relativeValue = value;
+			this._namespace = namespace;
+			return `${namespace.value}${value}`;
+		}
+
+		return value;
 	}
 }

@@ -23,11 +23,21 @@ describe('IRI - Unit', () => {
 			expect(john.relativeValue).to.equal('#John');
 			expect(john.value).to.equal('http://example.org/#John');
 
+			let josh = new IRI({ type: 'uri', value: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Josh' });
+			expect(josh.namespace.prefix).to.equal('rdf');
+			expect(josh.namespace.value).to.equal('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+			expect(josh.relativeValue).to.equal('Josh');
+			expect(josh.value).to.equal('http://www.w3.org/1999/02/22-rdf-syntax-ns#Josh');
+
 			let alice = new IRI('Alice', manager.getNamespaceByPrefix('rdf'));
 			expect(alice.namespace.prefix).to.equal('rdf');
 			expect(alice.namespace.value).to.equal('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 			expect(alice.relativeValue).to.equal('Alice');
 			expect(alice.value).to.equal('http://www.w3.org/1999/02/22-rdf-syntax-ns#Alice');
+		});
+
+		it('should throw InvalidOperationError if sparql query result binding provided and its type is uri', () => {
+			expect(() => new IRI({ type: 'bnode', value: 'b1' })).to.throw(InvalidOperationError);
 		});
 	});
 
