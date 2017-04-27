@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { LangLiteral } from '../../../src/model/lang-literal';
 import { XsdStringIRI } from '../../../src/model/constants';
 
-describe('LangLiteral - Unit', () => {
+describe('TypedLiteral - Unit', () => {
 	let typedLiteral = new TypedLiteral('Literal');
 
 	context('constructor', () => {

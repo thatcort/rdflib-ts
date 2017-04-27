@@ -12,11 +12,11 @@ pipelines:
         script: # Build, test and publish package
           - npm install
           - npm run build
-          - npm run test:unit
+          - npm test
           - npm publish
     development:
       - step:
          script: # Just build and test package
             - npm install
             - npm run build
-            - npm run test:unit
+            - npm test
