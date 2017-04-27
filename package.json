@@ -31,7 +31,7 @@
     "reexport": "npm run gulp reexport",
     "build": "npm run gulp build",
     "publish": "npm run gulp publish",
-    "test:unit": "nyc mocha test/unit/**/*.ts --timeout",
+    "test:unit": "nyc mocha test/unit/**/*.ts",
     "test:integration": "nyc mocha test/integration/**/*.ts --timeout 10000",
     "test:e2e": "nyc mocha test/e2e/**/*.ts --timeout 10000",
     "test": "nyc mocha test/**/*.ts --timeout 10000"
