@@ -3,12 +3,11 @@
     "tasks": [
         {
             "taskName": "compile",
-            "command": "tsc",
-            "args": ["-p", "."],
-            "isBuildCommand": true,
+            "command": "npm",
+            "args": ["run", "compile"],
             "isShellCommand": true,
-            "showOutput": "silent",
-			"problemMatcher": "$tsc"
+            "suppressTaskName": true,
+            "showOutput": "always"
         },
         {
             "taskName": "test",

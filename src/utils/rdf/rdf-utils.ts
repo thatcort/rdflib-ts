@@ -34,8 +34,8 @@ export class RdfUtils {
 			`(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)${/^file:\/\//.test(value) ? '?' : ''}` +
 			// domain name
 			'(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*' +
-			// TLD identifier - if it's file protocol it's optional
-			`(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))${/^file:\/\//.test(value) ? '?' : ''}` +
+			// TLD identifier - if it's file protocol or localhost it's optional
+			`(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))${/^file:\/\//.test(value) || /localhost/.test(value) ? '?' : ''}` +
 			// TLD may end with dot
 			'\\.?' +
 			')' +
@@ -63,6 +63,10 @@ export class RdfUtils {
 		);
 
 		return urnRegex.test(value);
+	}
+
+	public static isLocalFilePath(value: string): boolean {
+		return /^((?:[^/]*\/)*)(.*)\.[a-z]+/gi.test(value);
 	}
 
 	public static isAbsoluteIRI(value: string): boolean {

@@ -21,13 +21,15 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
+    "tsc": "tsc",
     "gulp": "gulp",
     "lint": "npm run gulp lint",
     "clean": "npm run gulp clean",
     "clean:lib": "npm run gulp clean-lib",
     "clean:coverage": "npm run gulp clean-coverage",
-    "compile": "npm run gulp compile",
     "copy:lib": "npm run gulp copy-lib",
+    "copy:datasets": "npm run gulp copy-datasets",
+    "compile": "npm run tsc && npm run copy:datasets",
     "reexport": "npm run gulp reexport",
     "build": "npm run gulp build",
     "publish": "npm run gulp publish",
@@ -49,6 +51,7 @@
     "@types/run-sequence": "0.0.29",
     "@types/sinon": "^2.1.2",
     "@types/sinon-as-promised": "^4.0.6",
+    "@types/superagent": "^2.0.36",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
@@ -74,6 +77,8 @@
   "dependencies": {
     "jsonld": "^0.4.11",
     "n3": "^0.10.0",
-    "sparql-client-2": "^0.6.1"
+    "sparql-client-2": "^0.6.1",
+    "stream-to-string": "^1.1.0",
+    "superagent": "^3.5.2"
   }
 }
