@@ -2,7 +2,7 @@ import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { ArgumentError } from '../errors/argument-error';
 import { PlainLiteral } from './plain-literal';
-import { ISparqlQueryResultBinding } from "./sparql-query-result";
+import { ISparqlQueryResultBinding } from './sparql-query-result';
 
 export class LangLiteral extends PlainLiteral {
 	private _language: string;

@@ -143,9 +143,9 @@ export class NTriple {
 				return new IRI(value);
 			} else if (RdfUtils.isBlankNode(value)) {
 				return new BlankNode(value);
-			} else if(RdfUtils.isTypedLiteral(value)) {
+			} else if (RdfUtils.isTypedLiteral(value)) {
 				return new TypedLiteral(value);
-			} else if(RdfUtils.isLangLiteral(value)) {
+			} else if (RdfUtils.isLangLiteral(value)) {
 				return new LangLiteral(value);
 			} else {
 				return new PlainLiteral(value);

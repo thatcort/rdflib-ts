@@ -5,7 +5,7 @@ import { Namespace } from './namespace';
 import { FormatError } from '../errors/format-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
-import { ISparqlQueryResultBinding } from "./sparql-query-result";
+import { ISparqlQueryResultBinding } from './sparql-query-result';
 
 export class IRI {
 	private _value: string;

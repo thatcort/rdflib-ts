@@ -2,9 +2,9 @@ import { ArgumentError } from '../errors/argument-error';
 import { XsdStringIRI } from './constants';
 import { IRI } from './iri';
 import { PlainLiteral } from './plain-literal';
-import { ISparqlQueryResultBinding } from "./sparql-query-result";
-import { RdfUtils } from "../utils/rdf/rdf-utils";
-import { InvalidOperationError } from "../errors/invalid-operation-error";
+import { ISparqlQueryResultBinding } from './sparql-query-result';
+import { RdfUtils } from '../utils/rdf/rdf-utils';
+import { InvalidOperationError } from '../errors/invalid-operation-error';
 
 export class TypedLiteral extends PlainLiteral {
 	private _dataType: IRI;
