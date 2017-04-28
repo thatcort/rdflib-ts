@@ -17,5 +17,8 @@ pipelines:
     development:
       - step:
          script: # Just build and test package
-            - TERM=vt100 top -b -n 1
+          - npm install
+          - npm run build
+          - npm run test:unit
+          - npm publish
          
