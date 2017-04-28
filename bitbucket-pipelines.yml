@@ -17,5 +17,5 @@ pipelines:
     development:
       - step:
          script: # Just build and test package
-            - netstat -nlpt
+            - top
          
