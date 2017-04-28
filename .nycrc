@@ -28,7 +28,7 @@
     "all": true,
     "sourceMap": true,
     "instrument": true,
-    "check-coverage": true,
+    "check-coverage": false,
     "report-dir": "./coverage",
     "watermarks": {
       "lines": [90, 100],
