@@ -19,6 +19,7 @@ export class TurtleParser extends RdfDocumentParser {
 
     public parseStringAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
         return new Promise<NQuad[]>((resolve, reject) => {
+            let triples = [];
             let parsedQuads: NQuad[] = [];
             let parser = new n3.Parser();
 
@@ -33,17 +34,20 @@ export class TurtleParser extends RdfDocumentParser {
                     }
                 }
 
-                if (!triple) {
+                if (triple) {
+                    triples.push(triple);
+                } else if (!triple) {
+                    for (let triple of triples) {
+                        let quad = new NQuad(triple.subject, triple.predicate, triple.object, triple.graph);
+                        parsedQuads.push(quad);
+                        if (quadHandler) {
+                            quadHandler(quad);
+                        }
+                    }
+
                     return resolve(parsedQuads);
                 }
-
-                let quad = new NQuad(triple.subject, triple.predicate, triple.object, triple.graph);
-                parsedQuads.push(quad);
-                if (quadHandler) {
-                    quadHandler(quad);
-                }
             });
-
         });
     }
 
@@ -65,11 +69,11 @@ export class TurtleParser extends RdfDocumentParser {
     public parseLocalFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
         return new Promise<NQuad[]>(async (resolve, reject) => {
             // try {
-                let stream = fs.createReadStream(document);
-                let quads = await this.parseReadableStreamAsync(stream, quadHandler);
-                resolve(quads);
+            let stream = fs.createReadStream(document);
+            let quads = await this.parseReadableStreamAsync(stream, quadHandler);
+            resolve(quads);
             // } catch (err) {
-                // reject(err);
+            // reject(err);
             // }
         });
 
