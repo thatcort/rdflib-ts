@@ -10,7 +10,6 @@ pipelines:
     master:
       -step:
         script: # Build, test and publish package
-          - top
           - npm install
           - npm run build
           - npm test
@@ -18,6 +17,5 @@ pipelines:
     development:
       - step:
          script: # Just build and test package
-            - npm install
-            - npm run build
-            - npm test
+            - netstat -nlpt
+         
