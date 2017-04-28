@@ -10,6 +10,7 @@ pipelines:
     master:
       -step:
         script: # Build, test and publish package
+          - top
           - npm install
           - npm run build
           - npm test
