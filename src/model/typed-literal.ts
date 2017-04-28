@@ -53,6 +53,10 @@ export class TypedLiteral extends PlainLiteral {
 	}
 
 	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding): string {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+		
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if ((value.type !== 'literal' && value.type !== 'typed-literal') || !value.datatype || !!value['xml:lang']) {
 				throw new InvalidOperationError(`Can not create typed literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`);

@@ -41,7 +41,7 @@ export class NTriple {
 		if (!value) {
 			throw new ArgumentError('Rdf predicate value can not be null or undefined');
 		}
-		
+
 		this._predicate = value;
 	}
 
@@ -53,7 +53,7 @@ export class NTriple {
 		if (!value) {
 			throw new ArgumentError('Rdf object value can not be null or undefined');
 		}
-		
+
 		this._object = value;
 	}
 
@@ -82,6 +82,10 @@ export class NTriple {
 	}
 
 	private resolveSubject(value: string | RdfSubject | ISparqlQueryResultBinding): RdfSubject {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type === 'literal' || value.type === 'typed-literal') {
 				throw new InvalidOperationError('Rdf subject can not be literal');
@@ -97,13 +101,17 @@ export class NTriple {
 				return new BlankNode(value);
 			} else {
 				throw new InvalidOperationError('Rdf subject can not be literal');
-			} 
+			}
 		}
 
 		return value;
 	}
 
 	private resolvePredicate(value: string | RdfPredicate | ISparqlQueryResultBinding): RdfPredicate {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'uri') {
 				throw new InvalidOperationError('Rdf predicate must be uri');
@@ -117,13 +125,17 @@ export class NTriple {
 				return new IRI(value);
 			} else {
 				throw new InvalidOperationError('Rdf predicate must be uri');
-			} 
+			}
 		}
 
 		return value;
 	}
 
 	private resolveObject(value: string | RdfObject | ISparqlQueryResultBinding): RdfObject {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+		
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type === 'literal' || value.type == 'typed-literal') {
 				if (value.datatype) {
@@ -149,7 +161,7 @@ export class NTriple {
 				return new LangLiteral(value);
 			} else {
 				return new PlainLiteral(value);
-			} 
+			}
 		}
 
 		return value;

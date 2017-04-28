@@ -11,7 +11,7 @@ export class LangLiteral extends PlainLiteral {
 		super(value);
 		this.language = language || this.language || 'en';
 	}
-	
+
 	public get language(): string {
 		return this._language;
 	}
@@ -40,12 +40,16 @@ export class LangLiteral extends PlainLiteral {
 			this.language = language;
 		}
 	}
-	
+
 	public toString(): string {
 		return `${super.toString()}@${this.language}`;
 	}
 
 	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding): string {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+		
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'literal' || !!value.datatype || !value['xml:lang']) {
 				throw new InvalidOperationError(`Can not create lang literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`);

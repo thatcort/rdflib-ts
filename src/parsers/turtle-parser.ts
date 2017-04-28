@@ -37,8 +37,8 @@ export class TurtleParser extends RdfDocumentParser {
                 if (triple) {
                     triples.push(triple);
                 } else if (!triple) {
-                    for (let triple of triples) {
-                        let quad = new NQuad(triple.subject, triple.predicate, triple.object, triple.graph);
+                    for (let triple of triples) {                        
+                        let quad = new NQuad(triple.subject.replace(/^_:b[0-9]+_/, '_:'), triple.predicate, triple.object.replace(/^_:b[0-9]+_/, '_:'), triple.graph);
                         parsedQuads.push(quad);
                         if (quadHandler) {
                             quadHandler(quad);

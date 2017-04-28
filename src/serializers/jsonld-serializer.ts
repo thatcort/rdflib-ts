@@ -2,6 +2,7 @@ import * as path from 'path';
 import { WriteStream } from 'fs';
 import * as fs from 'fs';
 import * as jsonld from 'jsonld';
+import * as mkdirp from 'mkdirp';
 
 import { NQuad } from '../model/n-quad';
 import { RdfFactory } from '../utils/rdf/rdf-factory';
@@ -23,31 +24,38 @@ export class JsonLDSerializer implements IRdfDataSerializer {
 				let document = await jsonld.promises.fromRDF(quads.join('\n'));
 				let compacted = await jsonld.promises.compact(document, context);
 
-				if (typeof output === 'string') {
-					let dirname = path.dirname(output);
-					fs.exists(dirname, exists => {
-						if (!exists) {
-							fs.mkdir(dirname, err => {
-								if (err) {
-									return reject(err);
-								}
+				let filePath = typeof output === 'string' ? output : <string>output.path;
+				let dirname = path.dirname(filePath);
 
+				fs.exists(dirname, exists => {
+					if (!exists) {
+						mkdirp(dirname, err => {
+							if (err) {
+								return reject(err);
+							}
+
+							if (typeof output === 'string') {
 								fs.writeFile(output, JSON.stringify(compacted, null, 2), (err, res) => {
 									err ? reject(err) : resolve(res);
 								});
-							});
-						} else {
+							} else {
+								output.write(compacted);
+								output.end();
+								resolve();
+							}
+						});
+					} else {
+						if (typeof output === 'string') {
 							fs.writeFile(output, JSON.stringify(compacted, null, 2), (err, res) => {
 								err ? reject(err) : resolve(res);
 							});
+						} else {
+							output.write(compacted);
+							output.end();
+							resolve();
 						}
-					});
-
-				} else {
-					output.write(compacted);
-					output.end();
-					resolve();
-				}
+					}
+				});
 			} catch (err) {
 				reject(err);
 			}

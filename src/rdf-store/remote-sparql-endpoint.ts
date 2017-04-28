@@ -103,7 +103,7 @@ export class RemoteSparqlEndpoint extends RdfStore {
 			queryBuilder.push(`GRAPH ${graph} {`);
 		}
 
-		queryBuilder.push(`${triples.map(t => t.toString()).join('\n')}`);
+		queryBuilder.push(`${triples.map(t => `${t.subject} ${t.predicate} ${t.object} .`).join('\n')}`);
 
 		if (graph !== 'default') {
 			queryBuilder.push('}');

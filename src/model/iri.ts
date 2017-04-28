@@ -72,6 +72,10 @@ export class IRI {
 	}
 
 	private resolveAbsoluteValue(value: string | ISparqlQueryResultBinding, namespace?: Namespace): string {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+		
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'uri') {
 				throw new InvalidOperationError(`Can not create IRI from sparql query result binding of type: '${value.type}'`);
@@ -79,7 +83,7 @@ export class IRI {
 
 			return value.value;
 		}
-		
+
 		if (namespace) {
 			this._relativeValue = value;
 			this._namespace = namespace;

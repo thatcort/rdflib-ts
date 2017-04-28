@@ -12,8 +12,8 @@ export class PlainLiteral {
 
 	public get value(): string {
 		return this._value;
-	}	
-	
+	}
+
 	public set value(value: string) {
 		if (value == null) {
 			throw new ArgumentError('Literal value can not be null or undefined');
@@ -26,7 +26,11 @@ export class PlainLiteral {
 		return `"${RdfUtils.escapeLiteral(this.value)}"`;
 	}
 
-	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding) : string {
+	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding): string {
+		if (!value) {
+			throw new ArgumentError('IRI value can not be null, undefined or empty string');
+		}
+		
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'literal' || !!value.datatype || !!value['xml:lang']) {
 				throw new InvalidOperationError(`Can not create plain literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`);

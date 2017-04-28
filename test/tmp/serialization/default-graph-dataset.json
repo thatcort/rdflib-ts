@@ -1,0 +1,119 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "ex": "http://example.org#"
+  },
+  "@graph": [
+    {
+      "@id": "ex:Alice",
+      "@type": "ex:Person",
+      "ex:about": "Some random girl for rdf data testing",
+      "ex:age": {
+        "@type": "xsd:integer",
+        "@value": "21"
+      },
+      "ex:child": {
+        "@id": "ex:Calvin"
+      },
+      "ex:knows": [
+        {
+          "@id": "_:b2"
+        },
+        {
+          "@id": "_:b3"
+        }
+      ]
+    },
+    {
+      "@id": "ex:Bob",
+      "@type": "ex:Person",
+      "ex:about": {
+        "@language": "en",
+        "@value": "Some random buddy for rdf data testing"
+      },
+      "ex:age": {
+        "@type": "xsd:integer",
+        "@value": "25"
+      },
+      "ex:child": {
+        "@id": "ex:Calvin"
+      },
+      "ex:knows": [
+        {
+          "@id": "_:b0"
+        },
+        {
+          "@id": "_:b1"
+        }
+      ]
+    },
+    {
+      "@id": "ex:Calvin",
+      "@type": "ex:Person",
+      "ex:about": {
+        "@language": "en",
+        "@value": "Some random buddy for rdf data testing"
+      },
+      "ex:age": {
+        "@type": "xsd:integer",
+        "@value": "25"
+      },
+      "ex:child": {
+        "@id": "ex:Mike"
+      },
+      "ex:knows": [
+        {
+          "@id": "ex:John"
+        },
+        {
+          "@id": "ex:Josh"
+        }
+      ]
+    },
+    {
+      "@id": "ex:John",
+      "@type": "ex:Person",
+      "ex:about": {
+        "@language": "en",
+        "@value": "Some random buddy for rdf data testing"
+      },
+      "ex:age": {
+        "@type": "xsd:integer",
+        "@value": "25"
+      },
+      "ex:child": {
+        "@id": "ex:Calvin"
+      },
+      "ex:knows": [
+        {
+          "@id": "ex:Jessie"
+        },
+        {
+          "@id": "ex:Josh"
+        }
+      ]
+    },
+    {
+      "@id": "ex:Josh",
+      "@type": "ex:Person",
+      "ex:about": {
+        "@language": "en",
+        "@value": "Some random buddy for rdf data testing"
+      },
+      "ex:age": "25",
+      "ex:child": {
+        "@id": "ex:Calvin"
+      },
+      "ex:knows": [
+        {
+          "@id": "ex:Jessie"
+        },
+        {
+          "@id": "ex:John"
+        }
+      ]
+    }
+  ]
+}
