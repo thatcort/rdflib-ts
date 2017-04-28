@@ -1,7 +1,7 @@
 # Docker container with nodejs environment and Apache Jena Fuseki server
 # To build image run: docker build -t node-fuseki .
 # To remove current instance run: docker rm node_fuseki_instance -f
-# To Run container run: docker run -p 3030:3030 -p 3031:3031 -p 3032:3032 --name node_fuseki_instance -t node-fuseki
+# To Run container run: docker run -p 3030:3030 -p 3033:3033 --name node_fuseki_instance -t node-fuseki
 
 FROM openjdk:latest
 MAINTAINER Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>
@@ -18,25 +18,33 @@ RUN npm --version
 
 # Install Fuseki
 
-ENV FUSEKI_HOME /home/fuseki
+ENV FUSEKI_HOME /root/fuseki
+
 ENV FUSEKI_VERSION 2.5.0
 ENV FUSEKI_MIRROR http://www.eu.apache.org/dist/
 ENV FUSEKI_ARCHIVE http://archive.apache.org/dist/
 
-VOLUME /fuseki
+
 RUN     wget -O fuseki.tar.gz $FUSEKI_MIRROR/jena/binaries/apache-jena-fuseki-$FUSEKI_VERSION.tar.gz || \
         wget -O fuseki.tar.gz $FUSEKI_ARCHIVE/jena/binaries/apache-jena-fuseki-$FUSEKI_VERSION.tar.gz && \
         tar zxf fuseki.tar.gz && \
         mv apache-jena-fuseki* $FUSEKI_HOME && \
-        rm fuseki.tar.gz* && \
-        cd $FUSEKI_HOME && rm -rf fuseki.war
+        rm fuseki.tar.gz* 
 
-		
+# Install supervisor and nginx
+RUN apt-get update && apt-get install -y supervisor && apt-get install -y nano wget dialog net-tools && apt-get install -y nginx
+
+# Config ngingx
+RUN rm -v /etc/nginx/nginx.conf
+ADD docker/nginx.conf /etc/nginx/
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+# Copy test datasets
+COPY test/datasets /usr/share/nginx/html/test/datasets
+
+# Copy supervisor config
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+	
 # Expose ports for server instances
-EXPOSE 3030 3031 3032
-
-# Run 3 server instances on diferent ports
-CMD ["/home/fuseki/fuseki-server", "--port", "3030", "--mem", "/TestStore"]
-CMD ["/home/fuseki/fuseki-server", "--port", "3031", "--mem", "/TestStore"]
-CMD ["/home/fuseki/fuseki-server", "--port", "3032", "--mem", "/TestStore"]
-
+EXPOSE 3030 3033
+ENTRYPOINT ["/usr/bin/supervisord"]

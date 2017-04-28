@@ -59,6 +59,7 @@ describe('RdfUtils - Unit', () => {
 			expect(RdfUtils.isUrl('http://a.b-c.de')).to.be.true;
 			expect(RdfUtils.isUrl('http://223.255.255.254')).to.be.true;
 			expect(RdfUtils.isUrl('www.example.org')).to.be.true;
+			expect(RdfUtils.isUrl('http://localhost:3033/test/datasets/jsonld/shacl_1_4_example_data_graph.json')).to.be.true;
 			expect(RdfUtils.isUrl('file://localhost/c:/WINDOWS/clock.avi')).to.be.true;
 			expect(RdfUtils.isUrl('file:///c:/WINDOWS/clock.avi')).to.be.true;
 		});
@@ -122,6 +123,21 @@ describe('RdfUtils - Unit', () => {
 			expect(RdfUtils.isUrn('urn:lex:eu:council:directive:2010-03-09;2010-19-UE')).to.be.true;
 			expect(RdfUtils.isUrn('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C')).to.be.true;
 			expect(RdfUtils.isUrn('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>')).to.be.true;
+		});
+	});
+
+	context('isLocalFilePath', () => {
+		it('should return false for invalid file path values', () => {
+			expect(RdfUtils.isLocalFilePath('not a valid file path')).to.be.false;
+			expect(RdfUtils.isLocalFilePath('no_extension')).to.be.false;
+			expect(RdfUtils.isLocalFilePath('/no_extension')).to.be.false;
+			expect(RdfUtils.isLocalFilePath('/some/path/no_extension')).to.be.false;
+		});
+
+		it('should return true for valid file path values', () => {
+			expect(RdfUtils.isLocalFilePath('file.txt')).to.be.true;
+			expect(RdfUtils.isLocalFilePath('/some/path/file.tsx')).to.be.true;
+			expect(RdfUtils.isLocalFilePath('D:/test/files/file.json')).to.be.true;
 		});
 	});
 

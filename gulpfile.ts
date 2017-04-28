@@ -41,14 +41,21 @@ gulp.task('clean', done => {
   return run('clean-coverage', 'clean-compiled', 'clean-lib', done);
 });
 
+gulp.task('copy-datasets', done => {
+  return gulp.src('test/datasets/**/*.*').pipe(gulp.dest('compiled/test/datasets'))
+});
 
 let tsProject = typescript.createProject('tsconfig.json');
 gulp.task('compile', () => {
-    return tsProject.src() 
-        .pipe(sourcemaps.init())
-        .pipe(tsProject())
-        .pipe(sourcemaps.write('.', undefined))
-        .pipe(gulp.dest('compiled'));        
+    return merge([
+        tsProject.src() 
+            .pipe(sourcemaps.init())
+            .pipe(tsProject())
+            .pipe(sourcemaps.write('.', undefined))
+            .pipe(gulp.dest('compiled')),
+        gulp.src('test/datasets')
+            .pipe(gulp.dest('compiled/test/datasets'))
+    ]);  
 });
 
 let tsLibProject = typescript.createProject('tsconfig.json', { declaration: true, sourceMap: false });
