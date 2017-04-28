@@ -17,6 +17,5 @@ pipelines:
     development:
       - step:
          script: # Just build and test package
-            - export TERM=xterm
-            - top
+            - TERM=vt100 top -b -n 1
          
