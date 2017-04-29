@@ -1,14 +1,16 @@
 {
-    "lines": 90,
-    "statements": 90,
-    "functions": 90,
-    "branches": 90,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
     "include": [
       "src/**/*.ts"
     ],
     "exclude": [
       "node_modules",
       "test",
+      "lib",
+      "compiled",
       "src/main.ts"
     ],
     "reporter": [
@@ -22,7 +24,7 @@
     "extension": [
       ".ts"
     ],
-    "cache": false,
+    "cache": true,
     "all": true,
     "sourceMap": true,
     "instrument": true,

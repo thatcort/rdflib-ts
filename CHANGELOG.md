@@ -1,5 +1,5 @@
-Tuesday, April 25, 2017 - v1.0.0
-=================================
+Sunday, April 30, 2017 - v1.0.0
+===========================================
 	* RDF model classes
 	* RDF data factory and validation utils
 	* N-Triples, N-Quads, Turtle, TriG, N3, JSON-LD parsers and serializers

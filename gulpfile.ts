@@ -41,14 +41,21 @@ gulp.task('clean', done => {
   return run('clean-coverage', 'clean-compiled', 'clean-lib', done);
 });
 
+gulp.task('copy-datasets', done => {
+  return gulp.src('test/datasets/**/*.*').pipe(gulp.dest('compiled/test/datasets'))
+});
 
 let tsProject = typescript.createProject('tsconfig.json');
 gulp.task('compile', () => {
-    return tsProject.src() 
-        .pipe(sourcemaps.init())
-        .pipe(tsProject())
-        .pipe(sourcemaps.write('.', undefined))
-        .pipe(gulp.dest('compiled'));        
+    return merge([
+        tsProject.src() 
+            .pipe(sourcemaps.init())
+            .pipe(tsProject())
+            .pipe(sourcemaps.write('.', undefined))
+            .pipe(gulp.dest('compiled')),
+        gulp.src('test/datasets')
+            .pipe(gulp.dest('compiled/test/datasets'))
+    ]);  
 });
 
 let tsLibProject = typescript.createProject('tsconfig.json', { declaration: true, sourceMap: false });
@@ -58,7 +65,7 @@ gulp.task('compile-lib', () => {
 
     return merge([
         tsResult.js
-            .pipe(babel({ presets: ['es2015']}))
+            .pipe(babel({ presets: ['es2016']}))
             .pipe(gulp.dest('lib')),
         tsResult.dts
             .pipe(gulp.dest('lib'))
@@ -82,13 +89,5 @@ gulp.task('reexport', done => {
 
 
 gulp.task('build', done => {
-    run('lint', 'clean', 'reexport-source', 'compile-lib', 'clean-index', 'compile',  done);
-});
-
-gulp.task('npm-publish', done => {
-  childProcess.spawn('npm', ['publish', 'lib'], { stdio: 'inherit' }).on('close', done);
-});
-
-gulp.task('publish', done => {
-    run('build', 'npm-publish', done);
+    run('lint', 'clean', 'reexport-source', 'compile-lib', 'clean-index', done);
 });

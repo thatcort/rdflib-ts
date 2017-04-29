@@ -3,13 +3,22 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: node:6.10.2
+image: node:latest
 
 pipelines:
   branches:
+    master:
+      -step:
+        script: # Build, test and publish package
+          - npm install
+          - npm run build
+          - npm run test:unit
+          - printf "//`node -p \"require('url').parse(process.env.NPM_REGISTRY_URL || 'https://registry.npmjs.org').host\"`/:_authToken=${NPM_TOKEN}\nregistry=${NPM_REGISTRY_URL:-https://registry.npmjs.org}\n" >> ~/.npmrc
+          - npm publish
     development:
       - step:
-         script: # Modify the commands below to build your repository.
-            - npm install
-            - npm run build
-            - npm test
+         script: # Just build and test package
+          - npm install
+          - npm run build
+          - npm run test:unit
+         

@@ -34,7 +34,26 @@
         "shacl",
         "Jena",
         "Fuseki",
-        "Serializer"
+        "Serializer",
+        "bitbucket",
+        "rdar",
+        "shouldfail",
+        "quux",
+        "isan",
+        "ISSN",
+        "ietf",
+        "lsid",
+        "zoobank",
+        "quotemark",
+        "datasets",
+        "jsonldparser",
+        "testcase",
+        "unknownfile",
+        "turtleparser",
+        "notexistingfile",
+        "promisify",
+        "promisified",
+        "Xsdg"
     ],
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.

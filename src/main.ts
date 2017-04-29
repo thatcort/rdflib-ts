@@ -1,11 +1,7 @@
-// import { BlankNode } from 'rdflib-ts';
-
-
+// USE THIS AS ENTRY POINT FUNCTION FOR MANUAL TESTING
+// THIS IS ENTRY POINT FOR NODE DEBUGGER CONFIGURATION
+// WHICH CAN BE RUN USING F5 KEY
 (async () => {
-	// Write code to debug
-	// let b1 = new BlankNode('b1');
-	// console.log(b1);
-
 	process.exit();
 })();
 
