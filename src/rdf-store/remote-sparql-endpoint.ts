@@ -13,86 +13,72 @@ export class RemoteSparqlEndpoint extends RdfStore {
 	public readonly endpointUpdateAddress: string;
 
 
-	public constructor(storeName: string, endpointBaseAddress: string) {
+	public constructor(storeName: string, endpointBaseAddress: string, queryEndpoint: string = 'sparql', updateEndpoint: string = 'update') {
 		super(storeName);
 
 		this.endpointBaseAddress = endpointBaseAddress;
-		this.endpointQueryAddress = `${endpointBaseAddress}/${storeName}/sparql`;
-		this.endpointUpdateAddress = `${endpointBaseAddress}/${storeName}/update`;
+		this.endpointQueryAddress = `${endpointBaseAddress}/${storeName}/${queryEndpoint}`;
+		this.endpointUpdateAddress = `${endpointBaseAddress}/${storeName}/${updateEndpoint}`;
 
 		this.sparqlClient = new SparqlClient(this.endpointQueryAddress, { updateEndpoint: this.endpointUpdateAddress });
 	}
 
 	public async importQuadsAsync(quads: NQuad[]): Promise<void> {
-		return new Promise<void>(async (resolve, reject) => {
-			try {
-				let queries = [];
-				let graphMap = this.groupQuadsByGraph(quads);
+		let scheduledQueries = [];
+		let graphMap = this.groupQuadsByGraph(quads);
 
-				for (let entry of graphMap.entries()) {
-					let query = this.buildInsertQuery(entry[0], entry[1]);
-					queries.push(this.queryAsync<any>(query));
-				}
+		// Schedule update query for every graph independently
+		for (let entry of graphMap.entries()) {
+			let query = this.buildInsertQuery(entry[0], entry[1]);
+			scheduledQueries.push(this.queryAsync<any>(query));
+		}
 
-				await Promise.all(queries);
-				this.storeSize += quads.length;
-				resolve();
-			} catch (err) {
-				reject(err);
-			}
-		});
+		// Execute update queries in parallel
+		await Promise.all(scheduledQueries);
+		this.storeSize += quads.length;
 	}
 
 	public async exportQuadsAsync(): Promise<NQuad[]> {
-		return new Promise<NQuad[]>(async (resolve, reject) => {
-			try {
-				let queryResult = await this.queryAsync<IQuadQueryResult>(`
-						SELECT *
-						WHERE
-						{
-							{
-								?subject ?predicate ?object
-							}
-							UNION
-							{
-								GRAPH ?graph
-								{
-									?subject ?predicate ?object
-								}		
-							}							
-						}	
-					`);
+		let queryResult = await this.queryAsync<IQuadQueryResult>(`
+			SELECT *
+			WHERE
+			{
+				{
+					?subject ?predicate ?object
+				}
+				UNION
+				{
+					GRAPH ?graph
+					{
+						?subject ?predicate ?object
+					}		
+				}							
+			}	
+		`);
 
-				let quads = queryResult.results.bindings.map(b => new NQuad(b.subject, b.predicate, b.object, b.graph));
-				resolve(quads);
-			} catch (err) {
-				reject(err);
-			}
-		});
+		return queryResult.results.bindings.map(b => new NQuad(b.subject, b.predicate, b.object, b.graph));
 	}
 
-	public async queryAsync<TResult>(query: string): Promise<ISparqlQueryResult<TResult>> {
-		return new Promise<ISparqlQueryResult<TResult>>((resolve, reject) => {
-			this.sparqlClient.query(query).execute().then(res => resolve(res)).catch(err => reject(err));
-		});
+	public queryAsync<TResult>(query: string): Promise<ISparqlQueryResult<TResult>> {
+		return this.sparqlClient.query(query).execute();
 	}
 
 	private groupQuadsByGraph(quads: NQuad[]): Map<string, NTriple[]> {
-        let graphMap = new Map<string, NTriple[]>();
+		let graphMap = new Map<string, NTriple[]>();
 
-        for (let quad of quads) {
+		for (let quad of quads) {
+			// If graph is undefined, put it in default graph
+			let graphName = quad.graph ? quad.graph.toString() : 'default';
 
-            let graphName = quad.graph ? quad.graph.toString() : 'default';
+			if (!graphMap.has(graphName)) {
+				graphMap.set(graphName, []);
+			}
 
-            if (!graphMap.has(graphName)) {
-                graphMap.set(graphName, []);
-            }
+			graphMap.get(graphName).push(quad);
+		}
 
-            graphMap.get(graphName).push(quad);
-        }
-
-        return graphMap;
-    }
+		return graphMap;
+	}
 
 	private buildInsertQuery(graph: string, triples: NTriple[]): string {
 		let queryBuilder = [];
