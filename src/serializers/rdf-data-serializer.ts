@@ -14,7 +14,18 @@ export interface IRdfDataSerializer {
 	serializeAsync(quads: NQuad[], output: string | WriteStream): Promise<void>;
 }
 
+export interface IRdfDataSerializerOptions {
+	skipUnusedNamespaces?: boolean;
+}
+
 export abstract class RdfDataSerializer implements IRdfDataSerializer {
+
+	public options: IRdfDataSerializerOptions;
+
+	public constructor(options: IRdfDataSerializerOptions = {}) {
+		this.options = Object.assign({}, { skipUnusedNamespaces: true }, options);
+	}
+
 	public abstract serializeAsync(quads: NQuad[], output: string | WriteStream): Promise<void>;
 
 	protected buildContext(quads: NQuad[]): any {
@@ -25,17 +36,20 @@ export abstract class RdfDataSerializer implements IRdfDataSerializer {
 		let context = {};
 		let namespaces = NamespaceManagerInstance.getAllNamespaces();
 
-		// Use all registered namespaces in namespace manager for JsonLD context
-		// There can surplus namespaces, but for now they are serialized all as context
-		// Checking if namespace prefix is used in any of quads can have 
-		// huge performance impact for large datasets
-		for (let namespace of namespaces.filter(n => n.prefix !== 'skolem')) {
+		// Filter namespaces by value used in any of quads
+		// This option can have impact on performance if dataset is large
+		if (this.options.skipUnusedNamespaces) {
+			namespaces = namespaces.filter(n => quads
+				.some(q => q.subject.value.indexOf(n.value) != -1 || q.predicate.value.indexOf(n.value) != -1 ||
+					q.object.value.indexOf(n.value) != -1 || (q.graph && q.graph.value.indexOf(n.value) != -1)))
+		}
+
+		for (let namespace of namespaces) {
 			context[namespace.prefix] = namespace.value;
 		}
 
 		return context;
 	}
-
 	protected async ensureDirectoryExistsAsync(output: string | WriteStream): Promise<void> {
 		if (!output) {
 			throw new ArgumentError('Can not ensure null or undefined directory exists');
