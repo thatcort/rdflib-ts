@@ -1,14 +1,7 @@
-import { PlainLiteral } from '../model/plain-literal';
-import { LangLiteral } from '../model/lang-literal';
-import { TypedLiteral } from '../model/typed-literal';
-import { ArgumentError } from '../errors/argument-error';
-import { Literal } from '../model/rdf-core-types';
-import * as path from 'path';
-import * as fs from 'fs';
+import { NQuad } from '../model/n-quad';
 import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { ReadStream } from 'fs';
-import { NQuad } from '../model/n-quad';
-
+import { ArgumentError } from '../errors/argument-error';
 
 export interface IRdfDocumentParser {
 	parseStringAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
@@ -31,10 +24,12 @@ export abstract class RdfDocumentParser implements IRdfDocumentParser {
 
 	public abstract parseRemoteFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
-	public parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+	public async parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
 		if (!document) {
-			return Promise.reject(new ArgumentError('Document can not be null, undefined or empty string'));
-		} else if (typeof document !== 'string') {
+			throw new ArgumentError('Document can not be null, undefined or empty string');
+		} 
+		
+		if (typeof document !== 'string') {
 			return this.parseReadableStreamAsync(document, quadHandler);
 		} else if (document.startsWith('http://')) {
 			return this.parseRemoteFileAsync(document, quadHandler);
