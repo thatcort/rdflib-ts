@@ -1,6 +1,7 @@
 import { NQuad } from '../../model/n-quad';
 import { RdfStore } from '../../rdf-store/rdf-store';
 import { RdfIOManager } from '../../utils/io/rdf-io-manager';
+import { ArgumentError } from '../../errors/argument-error';
 
 export interface IRdfDataExporterOptions {
 	unskolemize?: boolean;
@@ -9,40 +10,34 @@ export interface IRdfDataExporterOptions {
 export class RdfDataExporter {
 	public options: IRdfDataExporterOptions;
 
-
-	public constructor(options?: IRdfDataExporterOptions) {
-		this.options = options || {};
-		this.options.unskolemize = this.options.unskolemize || true;
+	public constructor(options: IRdfDataExporterOptions = {}) {
+		this.options = Object.assign({}, { unskolemize: true }, options);
 	}
 
-	public exportRdfDataAsync(dataSource: RdfStore | NQuad[], outSource?: string | RdfStore): Promise<NQuad[]> {
-		return new Promise<NQuad[]>(async (resolve, reject) => {
-			let quads: NQuad[] = [];
+	public async exportRdfDataAsync(dataSource: RdfStore | NQuad[], outSource?: string | RdfStore): Promise<NQuad[]> {
+		if (!dataSource) {
+			throw new ArgumentError('Can not export null or undefined data source');
+		}
 
-			try {
-				if (Array.isArray(dataSource)) {
-					quads = dataSource;
-				} else {
-					quads = await dataSource.exportQuadsAsync();
-				}
+		// If data source is rdf store, export quads from it
+		// otherwise quads are data source itself 
+		let quads: NQuad[] = dataSource instanceof RdfStore ? await dataSource.exportQuadsAsync() : dataSource;
 
-				if (this.options.unskolemize) {
-					quads.forEach(quad => quad.unskolemize());
-				}
+		// Revert blank node replacement if specified in options
+		if (this.options.unskolemize) {
+			quads.forEach(quad => quad.unskolemize());
+		}
 
-				if (outSource) {
-					if (outSource instanceof RdfStore) {
-						await outSource.importQuadsAsync(quads);
-					} else {
-						let rdfIoManager = new RdfIOManager();
-						await rdfIoManager.serializeAsync(quads, outSource);
-					}
-				}
+		// if out source specified, it can be rdf store or file path
+		// if it's rdf store import exported quads to target store
+		// if it's file path serialize it to file, let rdf io manager deal with format and extension
+		if (outSource instanceof RdfStore) {
+			await outSource.importQuadsAsync(quads);
+		} else if (typeof outSource === 'string') {
+			let rdfIoManager = new RdfIOManager();
+			await rdfIoManager.serializeAsync(quads, outSource);
+		}
 
-				resolve(quads);
-			} catch (err) {
-				reject(err);
-			}
-		});
+		return quads;
 	}
 }

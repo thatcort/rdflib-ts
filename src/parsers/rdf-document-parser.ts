@@ -11,13 +11,13 @@ import { NQuad } from '../model/n-quad';
 
 
 export interface IRdfDocumentParser {
-	parseStringAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+	parseStringAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
-	parseReadableStreamAsync(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+	parseReadableStreamAsync?(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
-	parseLocalFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+	parseLocalFileAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
-	parseRemoteFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+	parseRemoteFileAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
 	parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 }

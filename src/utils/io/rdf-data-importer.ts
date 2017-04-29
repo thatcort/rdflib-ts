@@ -1,10 +1,8 @@
-import { NQuad } from '../../model/n-quad';
 import { IRI } from '../../model/iri';
+import { NQuad } from '../../model/n-quad';
 import { RdfStore } from '../../rdf-store/rdf-store';
-import { RdfUtils } from '../../utils/rdf/rdf-utils';
-import { Namespace } from '../../model/namespace';
-import { ReadStream } from 'fs';
-import { RdfIOManager } from '../../utils/io/rdf-io-manager';
+import { RdfIOManager } from './rdf-io-manager';
+import { ArgumentError } from '../../errors/argument-error';
 
 export interface IRdfDataImporterOptions {
 	importChunkSize?: number;
@@ -13,60 +11,37 @@ export interface IRdfDataImporterOptions {
 }
 
 export class RdfDataImporter {
-
 	public options: IRdfDataImporterOptions;
 
-	public constructor(options?: IRdfDataImporterOptions) {
-		this.options = options || {};
-		this.options.importChunkSize = this.options.importChunkSize || 500;
-		this.options.skolemize = this.options.skolemize || true;
+	public constructor(options: IRdfDataImporterOptions = {}) {
+		this.options = Object.assign({}, { importChunkSize: 1000, skolemize: true }, options);
 	}
 
-	public importRdfDataAsync(dataSource: string | NQuad[], store: RdfStore): Promise<void> {
-		return new Promise<void>(async (resolve, reject) => {
-			try {
-				let quads = [];
-				let importedQuads = 0;
-				let imports = [];
+	public async importRdfDataAsync(dataSource: string | NQuad[], targetStore: RdfStore): Promise<void> {
+		if (!dataSource || !targetStore) {
+			throw new ArgumentError('Data source and target store can not be null or undefined');
+		}
 
-				if (Array.isArray(dataSource)) {
-					for (let i = 0; i < dataSource.length; i += this.options.importChunkSize) {
-						let quadsLeft = dataSource.length - i;
-						let sliceSize = this.options.importChunkSize > quadsLeft ? quadsLeft : this.options.importChunkSize;
-						quads = dataSource.slice(i, sliceSize);
-						imports.push(store.importQuadsAsync(quads));
-						importedQuads += quads.length;
-					}
-				} else {
-					let rdfIoManager = new RdfIOManager();
-					await rdfIoManager.parseDocumentAsync(dataSource, (quad) => {
-						if (quads.length === this.options.importChunkSize) {
-							imports.push(store.importQuadsAsync(quads));
-							importedQuads += quads.length;
+		// If it's string source, let io manager find appropriate parser 
+		if (typeof dataSource === 'string') {
+			let rdfIoManager = new RdfIOManager();
+			dataSource = await rdfIoManager.parseDocumentAsync(dataSource);
+		}
 
-							quads = [];
-						}
+		// Replace blank nodes with skolem iries
+		if (this.options.skolemize) {
+			dataSource.forEach(quad => quad.skolemize());
+		}
 
-						if (this.options.skolemize) {
-							quad.skolemize();
-						}
+		let scheduledImports: Promise<void>[] = [];
 
-						quads.push(quad);
-					});
+		// Chunk array and schedule import for every chunk
+		for (let i = 0; i < dataSource.length; i += this.options.importChunkSize) {
+			let chunkForImport = dataSource.slice(i, i + this.options.importChunkSize);
+        	scheduledImports.push(targetStore.importQuadsAsync(chunkForImport));
+   		}
 
-					if (quads.length > 0) {
-						imports.push(store.importQuadsAsync(quads));
-						importedQuads += quads.length;
-						quads = [];
-					}
-
-				}
-
-				await Promise.all(imports);
-				resolve();
-			} catch (error) {
-				reject(error);
-			}
-		});
+		// Initialize import in parallel
+		await Promise.all(scheduledImports);
 	}
 }

@@ -367,6 +367,7 @@ To run tests, run `npm test` command. For running integration test, instance of 
  - Implement in memory RDF store with SPARQL 1.1 support
  - Add support for RDF/XML serialization format
  - Reach 100% code coverage
+ - Setup docker containers with fuseki server and static file server for integration and e2e tests
  - Make it browser friendly
 
 License

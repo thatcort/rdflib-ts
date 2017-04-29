@@ -39,6 +39,7 @@
     "test": "nyc mocha test/**/*.ts --timeout 10000"
   },
   "devDependencies": {
+    "@types/bluebird-global": "^3.5.2",
     "@types/chai": "^3.5.1",
     "@types/chai-as-promised": "0.0.30",
     "@types/del": "^2.2.32",
@@ -51,7 +52,6 @@
     "@types/run-sequence": "0.0.29",
     "@types/sinon": "^2.1.2",
     "@types/sinon-as-promised": "^4.0.6",
-    "@types/superagent": "^2.0.36",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
@@ -75,6 +75,7 @@
     "typescript": "^2.2.2"
   },
   "dependencies": {
+    "bluebird": "^3.5.0",
     "jsonld": "^0.4.11",
     "n3": "^0.10.0",
     "sparql-client-2": "^0.6.1",

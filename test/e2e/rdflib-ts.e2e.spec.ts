@@ -249,7 +249,7 @@ describe('RDFLib.ts', () => {
 			namedGraphQuads.should.be.ok;
 			namedGraphQuads.should.have.lengthOf(namedGraphDataset.length);
 
-			del.sync('test/tmp/serialization');
+			del.sync('test/tmp');
 		});
 	});
 
@@ -276,6 +276,8 @@ describe('RDFLib.ts', () => {
 			await exporter.exportRdfDataAsync(store1, store2);
 			let exportFromStore2 = await exporter.exportRdfDataAsync(store2);
 			exportFromStore2.should.have.lengthOf(defaultGraphDataset.length + namedGraphDataset.length);
+
+			del.sync('test/tmp');
 		});
 	});
 });
