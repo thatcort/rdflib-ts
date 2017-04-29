@@ -65,7 +65,7 @@ gulp.task('compile-lib', () => {
 
     return merge([
         tsResult.js
-            .pipe(babel({ presets: ['es2015']}))
+            .pipe(babel({ presets: ['es2016']}))
             .pipe(gulp.dest('lib')),
         tsResult.dts
             .pipe(gulp.dest('lib'))
@@ -89,5 +89,5 @@ gulp.task('reexport', done => {
 
 
 gulp.task('build', done => {
-    run('lint', 'clean', 'reexport-source', 'compile-lib', 'clean-index', 'compile',  done);
+    run('lint', 'clean', 'reexport-source', 'compile-lib', 'clean-index', done);
 });

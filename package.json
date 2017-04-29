@@ -1,6 +1,6 @@
 {
   "name": "rdflib-ts",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
   "homepage": "https://bitbucket.org/vladimir_djurdjevic/rdflib.ts",
   "keywords": [
@@ -52,7 +52,8 @@
     "@types/run-sequence": "0.0.29",
     "@types/sinon": "^2.1.2",
     "@types/sinon-as-promised": "^4.0.6",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-preset-es2016": "^6.24.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "del": "^2.2.2",
