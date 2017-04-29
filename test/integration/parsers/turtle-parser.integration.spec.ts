@@ -1,13 +1,14 @@
-
-import * as fs from 'fs';
-import { TurtleParser } from '../../../src/parsers/turtle-parser';
 import 'mocha';
-import * as chaiAsPromised from 'chai-as-promised';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
+import * as chaiAsPromised from 'chai-as-promised';
 
 chai.use(chaiAsPromised);
-import { expect } from 'chai';
+chai.should();
+
+import * as fs from 'fs';
+
+import { TurtleParser } from '../../../src/parsers/turtle-parser';
 
 describe('TurtleParser - Integration', () => {
 	let parser = new TurtleParser();
@@ -17,13 +18,13 @@ describe('TurtleParser - Integration', () => {
 		let testCase3Promise = parser.parseDocumentAsync('test/datasets/ttl/turtleparser_testcase3_21quads.trig');
 
 		return Promise.all([
-			expect(testCase1Promise).to.be.fulfilled,
-			expect(testCase1Promise).to.eventually.be.ok,
-			expect(testCase1Promise).to.eventually.has.lengthOf(10),
+			testCase1Promise.should.be.fulfilled,
+			testCase1Promise.should.eventually.be.ok,
+			testCase1Promise.should.eventually.has.lengthOf(10),
 
-			expect(testCase3Promise).to.be.fulfilled,
-			expect(testCase3Promise).to.eventually.be.ok,
-			expect(testCase3Promise).to.eventually.has.lengthOf(21)
+			testCase3Promise.should.be.fulfilled,
+			testCase3Promise.should.eventually.be.ok,
+			testCase3Promise.should.eventually.has.lengthOf(21)
 		]);
 	});
 
@@ -35,13 +36,13 @@ describe('TurtleParser - Integration', () => {
 		let testCase3Promise = parser.parseDocumentAsync(testCase3Stream);
 
 		return Promise.all([
-			expect(testCase1Promise).to.be.fulfilled,
-			expect(testCase1Promise).to.eventually.be.ok,
-			expect(testCase1Promise).to.eventually.has.lengthOf(10),
+			testCase1Promise.should.be.fulfilled,
+			testCase1Promise.should.eventually.be.ok,
+			testCase1Promise.should.eventually.has.lengthOf(10),
 
-			expect(testCase3Promise).to.be.fulfilled,
-			expect(testCase3Promise).to.eventually.be.ok,
-			expect(testCase3Promise).to.eventually.has.lengthOf(21)
+			testCase3Promise.should.be.fulfilled,
+			testCase3Promise.should.eventually.be.ok,
+			testCase3Promise.should.eventually.has.lengthOf(21)
 		]);
 	});
 
@@ -53,13 +54,13 @@ describe('TurtleParser - Integration', () => {
 		let testCase3Promise = parser.parseDocumentAsync(testCase3String);
 
 		return Promise.all([
-			expect(testCase1Promise).to.be.fulfilled,
-			expect(testCase1Promise).to.eventually.be.ok,
-			expect(testCase1Promise).to.eventually.has.lengthOf(10),
+			testCase1Promise.should.be.fulfilled,
+			testCase1Promise.should.eventually.be.ok,
+			testCase1Promise.should.eventually.has.lengthOf(10),
 
-			expect(testCase3Promise).to.be.fulfilled,
-			expect(testCase3Promise).to.eventually.be.ok,
-			expect(testCase3Promise).to.eventually.has.lengthOf(21)
+			testCase3Promise.should.be.fulfilled,
+			testCase3Promise.should.eventually.be.ok,
+			testCase3Promise.should.eventually.has.lengthOf(21)
 		]);
 	});
 
@@ -68,13 +69,13 @@ describe('TurtleParser - Integration', () => {
 		let testCase3Promise = parser.parseDocumentAsync('http://localhost:3033/test/datasets/ttl/turtleparser_testcase3_21quads.trig');
 
 		return Promise.all([
-			expect(testCase1Promise).to.be.fulfilled,
-			expect(testCase1Promise).to.eventually.be.ok,
-			expect(testCase1Promise).to.eventually.has.lengthOf(10),
+			testCase1Promise.should.be.fulfilled,
+			testCase1Promise.should.eventually.be.ok,
+			testCase1Promise.should.eventually.has.lengthOf(10),
 
-			expect(testCase3Promise).to.be.fulfilled,
-			expect(testCase3Promise).to.eventually.be.ok,
-			expect(testCase3Promise).to.eventually.has.lengthOf(21)
+			testCase3Promise.should.be.fulfilled,
+			testCase3Promise.should.eventually.be.ok,
+			testCase3Promise.should.eventually.has.lengthOf(21)
 		]);
 	});
 
@@ -82,8 +83,8 @@ describe('TurtleParser - Integration', () => {
 		let handlerSpy = sinon.spy();
 		await parser.parseDocumentAsync('test/datasets/ttl/turtleparser_testcase1_10quads.ttl', handlerSpy);
 
-		expect(handlerSpy.called).to.be.true;
-		expect(handlerSpy.callCount).to.be.equal(10);
+		handlerSpy.called.should.be.true;
+		handlerSpy.callCount.should.be.equal(10);
 	});
 
 	it('should reject if invalid input provided (file does not exist, remote file does not exist, invalid json format', () => {
@@ -95,12 +96,12 @@ describe('TurtleParser - Integration', () => {
 		let testCase6Promise = parser.parseDocumentAsync(null);
 
 		return Promise.all([
-			expect(testCase1Promise).to.be.rejected,
-			expect(testCase2Promise).to.be.rejected,
-			expect(testCase3Promise).to.be.rejected,
-			expect(testCase4Promise).to.be.rejected,
-			expect(testCase5Promise).to.be.rejected,
-			expect(testCase6Promise).to.be.rejected
+			testCase1Promise.should.be.rejected,
+			testCase2Promise.should.be.rejected,
+			testCase3Promise.should.be.rejected,
+			testCase4Promise.should.be.rejected,
+			testCase5Promise.should.be.rejected,
+			testCase6Promise.should.be.rejected
 		]);
 	});
 });
