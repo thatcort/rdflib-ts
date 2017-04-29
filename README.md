@@ -303,11 +303,6 @@ try {
  
 ###### RdfFactory:
 * `RdFactory.createLiteral(value: string, language?: string, datatype?: string): Literal`
-* `RdFactory.createRdfSubject(value: string): RdfSubject`
-* `RdFactory.createRdfSubject(value: string): RdfSubject`
-* `RdFactory.createRdfTermFromSparqlResult(result: ISparqlQueryResultBinding): RdfTerm`
-* `RdFactory.createNQuadFromSparqlResult(result: IQuadQueryResult): NQuad`
-
 
 ##### Custom errors (exceptions)
 RDFLib.ts contains set of custom error classes for handling different error scenarios.
