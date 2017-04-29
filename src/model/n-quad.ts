@@ -1,10 +1,9 @@
-import { InvalidOperationError } from '../errors/invalid-operation-error';
-import { RdfUtils } from '../utils/rdf/rdf-utils';
-import { ISparqlQueryResultBinding } from './sparql-query-result';
-import { RdfObject, RdfPredicate, RdfSubject } from './rdf-core-types';
 import { IRI } from './iri';
 import { NTriple } from './n-triple';
-
+import { RdfUtils } from '../utils/rdf/rdf-utils';
+import { InvalidOperationError } from '../errors/invalid-operation-error';
+import { ISparqlQueryResultBinding } from './sparql-query-result';
+import { RdfObject, RdfPredicate, RdfSubject } from './rdf-core-types';
 
 export class NQuad extends NTriple {
 	public graph: IRI;

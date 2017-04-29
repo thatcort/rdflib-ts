@@ -1,14 +1,14 @@
-import { PlainLiteral } from './plain-literal';
-import { LangLiteral } from './lang-literal';
-import { TypedLiteral } from './typed-literal';
-import { InvalidOperationError } from '../errors/invalid-operation-error';
-import { ArgumentError } from '../errors/argument-error';
-import { RdfObject, RdfPredicate, RdfSubject, RdfTerm } from './rdf-core-types';
+import { IRI } from './iri';
+import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { Namespace } from './namespace';
 import { BlankNode } from './blank-node';
-import { RdfUtils } from '../utils/rdf/rdf-utils';
-import { IRI } from './iri';
+import { LangLiteral } from './lang-literal';
+import { PlainLiteral } from './plain-literal';
+import { TypedLiteral } from './typed-literal';
+import { ArgumentError } from '../errors/argument-error';
+import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { ISparqlQueryResultBinding } from './sparql-query-result';
+import { RdfObject, RdfPredicate, RdfSubject, RdfTerm } from './rdf-core-types';
 
 export class NTriple {
 	protected _subject: RdfSubject;

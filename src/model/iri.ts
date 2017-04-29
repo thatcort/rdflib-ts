@@ -1,8 +1,7 @@
-import { ArgumentError } from '../errors/argument-error';
-
 import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { Namespace } from './namespace';
 import { FormatError } from '../errors/format-error';
+import { ArgumentError } from '../errors/argument-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
 import { ISparqlQueryResultBinding } from './sparql-query-result';

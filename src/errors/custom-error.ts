@@ -5,10 +5,10 @@ export abstract class CustomError extends Error {
 	public constructor(error?: string | Error, innerError?: Error) {
 		super();
 
-		if (error && error instanceof Error) {
-			innerError = error;
-		} else if (error && typeof error === 'string') {
+		if (typeof error === 'string') {
 			this.originalMessage = error;
+		} else if (error instanceof Error) {
+			innerError = error;
 		}
 
 		this.innerError = innerError;
@@ -18,7 +18,7 @@ export abstract class CustomError extends Error {
 	private setFullErrorMessage(error?: string | Error) {
 		let errorMessageBuilder = [];
 
-		if (error && typeof error === 'string') {
+		if (typeof error === 'string') {
 			errorMessageBuilder.push(error);
 		}
 
