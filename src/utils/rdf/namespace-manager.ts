@@ -23,6 +23,8 @@ export class NamespaceManager {
 		let namespace = null;
 		let valueRegex = new RegExp(`^${value}\/?$`);
 
+		// Based on input combination, match by both prefix and value
+		// or just prefix or just value
 		if (prefix && value) {
 			namespace = this.coreNamespaces.find(ns => ns.prefix === prefix && valueRegex.test(ns.value)) ||
 				this.generatedNamespaces.find(ns => ns.prefix === prefix && valueRegex.test(ns.value));
@@ -59,6 +61,7 @@ export class NamespaceManager {
 	}
 
 	public generateNamespace(value: string): Namespace {
+		// Generate namespace prefix with auto incremented id: _ns0, _ns1, _n2..
 		let generatedNamespace = new Namespace(`_ns${this.generatedNamespaces.length}`, value);
 		this.generatedNamespaces.push(generatedNamespace);
 
