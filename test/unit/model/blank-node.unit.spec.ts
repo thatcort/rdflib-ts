@@ -1,10 +1,12 @@
-import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
 import 'mocha';
-import { expect } from 'chai';
+import * as chai from 'chai';
+
+let should = chai.should();
 
 import { BlankNode } from '../../../src/model/blank-node';
 import { FormatError } from '../../../src/errors/format-error';
 import { ArgumentError } from '../../../src/errors/argument-error';
+import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
 
 describe('BlankNode - Unit', () => {
 	let blankNode = new BlankNode();
@@ -12,10 +14,10 @@ describe('BlankNode - Unit', () => {
 	context('constructor', () => {
 		it('should set blank node value', () => {
 			blankNode = new BlankNode('b1');
-			expect(blankNode.value).to.equal('b1');
+			blankNode.value.should.equal('b1');
 
 			blankNode = new BlankNode({ type: 'bnode', value: 'b1' });
-			expect(blankNode.value).to.equal('b1');
+			blankNode.value.should.equal('b1');
 		});
 
 		it('should generate value in form of b plus auto increment if not provided', () => {
@@ -25,40 +27,40 @@ describe('BlankNode - Unit', () => {
 			let blankNode2 = new BlankNode();
 			let blankNode2Id = parseInt(blankNode2.value.replace('b', ''));
 
-			expect(blankNode1Id).to.equal(blankNode2Id - 1);
+			blankNode1Id.should.equal(blankNode2Id - 1);
 		});
 
 		it('should throw InvalidOperationError if sparql query result binding provided and its type is not bnode', () => {
-			expect(() => new BlankNode({ type: 'uri', value: 'b1' })).to.throw(InvalidOperationError);
+			() => new BlankNode({ type: 'uri', value: 'b1' }).should.throw(InvalidOperationError);
 		});
 	});
 
 	context('set value', () => {
 		it('should throw ArgumentError if null, undefined or empty string provided', () => {
-			expect(() => blankNode.value = null).to.throw(ArgumentError);
-			expect(() => blankNode.value = undefined).to.throw(ArgumentError);
-			expect(() => blankNode.value = '').to.throw(ArgumentError);
+			(() => blankNode.value = null).should.throw(ArgumentError);
+			(() => blankNode.value = undefined).should.throw(ArgumentError);
+			(() => blankNode.value = '').should.throw(ArgumentError);
 		});
 
 		it('should throw FormatError if invalid blank node value provided', () => {
-			expect(() => blankNode.value = 'invalid blank node value').to.throw(FormatError);
+			(() => blankNode.value = 'invalid blank node value').should.throw(FormatError);
 		});
 
 		it('should set blank node value if format is correct', () => {
 			blankNode.value = 'b1';
-			expect(blankNode.value).to.equal('b1');
+			blankNode.value.should.equal('b1');
 		});
 
 		it('should remove _: from beginning of blank node value', () => {
 			blankNode.value = '_:b1';
-			expect(blankNode.value).to.equal('b1');
+			blankNode.value.should.equal('b1');
 		});
 	});
 
 	context('toString', () => {
 		it('should append _: at the beginning of blank node value', () => {
 			blankNode.value = 'b1';
-			expect(blankNode.toString()).to.equal('_:b1');
+			blankNode.toString().should.equal('_:b1');
 		});		
 	});
 });
