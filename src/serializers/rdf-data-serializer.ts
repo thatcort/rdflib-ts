@@ -72,4 +72,19 @@ export abstract class RdfDataSerializer implements IRdfDataSerializer {
 			}
 		}
 	}
+
+	protected writeToStreamAsync(stream: WriteStream, content: string): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			stream.on('finish', () => {
+				return resolve();
+			});
+
+			stream.on('error', err => {
+				return reject(err);
+			});
+
+			stream.write(content);
+			stream.end();
+		});
+	}
 }
