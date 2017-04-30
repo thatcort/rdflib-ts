@@ -41,7 +41,7 @@ export abstract class RdfDataSerializer implements IRdfDataSerializer {
 		if (this.options.skipUnusedNamespaces) {
 			namespaces = namespaces.filter(n => quads
 				.some(q => q.subject.value.indexOf(n.value) != -1 || q.predicate.value.indexOf(n.value) != -1 ||
-					q.object.value.indexOf(n.value) != -1 || (q.graph && q.graph.value.indexOf(n.value) != -1)))
+					q.object.toString().indexOf(n.value) != -1 || (q.graph && q.graph.value.indexOf(n.value) != -1)))
 		}
 
 		for (let namespace of namespaces) {
@@ -71,5 +71,20 @@ export abstract class RdfDataSerializer implements IRdfDataSerializer {
 				throw new InvalidOperationError(err);
 			}
 		}
+	}
+
+	protected writeToStreamAsync(stream: WriteStream, content: string): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			stream.on('finish', () => {
+				return resolve();
+			});
+
+			stream.on('error', err => {
+				return reject(err);
+			});
+
+			stream.write(content);
+			stream.end();
+		});
 	}
 }

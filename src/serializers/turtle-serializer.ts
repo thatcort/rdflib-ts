@@ -21,20 +21,30 @@ export class TurtleSerializer extends RdfDataSerializer {
 			output = fs.createWriteStream(output);
 		}
 
-		// Serialize quads to stream
-		let context = this.buildContext(quads);
-		let writer = n3.Writer(output, { prefixes: context });
+		let turtleString = await this.quadsToTurtleStringAsync(quads, output);
+		await this.writeToStreamAsync(output, turtleString);
+	}
 
-		// Since object can be literal with optionally language or datatype tag
-		// toString() must be called instead of value property to ensure proper
-		// literal formatting in output
-		quads.forEach(quad => writer.addTriple({
-			subject: quad.subject.value,
-			predicate: quad.predicate.value,
-			object: quad.object instanceof IRI || quad.object instanceof BlankNode ? quad.object.value : quad.object.toString(),
-			graph: quad.graph ? quad.graph.value : undefined
-		}));
+	private quadsToTurtleStringAsync(quads: NQuad[], output: WriteStream): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			// Serialize quads to stream
+			let context = this.buildContext(quads);
+			let writer = new n3.Writer({ prefixes: context });
 
-		writer.end();
+			// Since object can be literal with optionally language or datatype tag
+			// toString() must be called instead of value property to ensure proper
+			// literal formatting in output
+			quads.forEach(quad => writer.addTriple({
+				subject: quad.subject.value,
+				predicate: quad.predicate.value,
+				object: quad.object instanceof IRI || quad.object instanceof BlankNode ? quad.object.value : quad.object.toString(),
+				graph: quad.graph ? quad.graph.value : undefined
+			}));
+
+			writer.end((err, res) => {
+				// Again workaround for n3 library bug (appends <> to datatype iries in literals)
+				return err ? reject(err) : resolve(res.replace(/"\^\^<</g, '"^^<').replace(/>>/g, '>'));
+			});
+		});
 	}
 }

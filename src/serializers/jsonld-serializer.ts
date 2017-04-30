@@ -22,8 +22,7 @@ export class JsonLDSerializer extends RdfDataSerializer {
 		if (typeof output === 'string') {
 			await fs.writeFileAsync(output, JSON.stringify(compacted, null, 2));
 		} else {
-			output.write(compacted);
-			output.end();
+			await this.writeToStreamAsync(output, JSON.stringify(compacted, null, 2));
 		}
 	}
 }
