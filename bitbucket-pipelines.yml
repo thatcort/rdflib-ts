@@ -3,13 +3,14 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: vladimirdjurdjevic93/rdflib-ts
+image: vladimirdjurdjevic93/java-node
 
 pipelines:
   branches:
     master:
      - step:
         script: # Build, test and publish package
+          - npm install
           - npm run build
           - npm test
           - printf "//`node -p \"require('url').parse(process.env.NPM_REGISTRY_URL || 'https://registry.npmjs.org').host\"`/:_authToken=${NPM_TOKEN}\nregistry=${NPM_REGISTRY_URL:-https://registry.npmjs.org}\n" >> ~/.npmrc
@@ -17,6 +18,7 @@ pipelines:
     development:
       - step:
          script: # Just build and test package
+          - npm install
           - npm run build
           - npm test
          
