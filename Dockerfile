@@ -7,11 +7,11 @@ MAINTAINER Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>
 
 RUN apt-get update
 RUN apt-get install curl
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash
 RUN apt-get install nodejs
 
 # Install npm packages
 
-ADD package.json /opt/atlassian/pipelines/agent/build/package.json
-RUN cd /opt/atlassian/pipelines/agent/build && npm install
-RUN rm /opt/atlassian/pipelines/agent/build/package.json
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /opt/atlassian/pipelines/agent/build && cp -a /tmp/node_modules /opt/atlassian/pipelines/agent/build/
