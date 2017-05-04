@@ -1,6 +1,6 @@
 {
   "name": "rdflib-ts",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
   "homepage": "https://bitbucket.org/vladimir_djurdjevic/rdflib.ts",
   "keywords": [
@@ -32,6 +32,7 @@
     "compile": "npm run tsc && npm run copy:datasets",
     "reexport": "npm run gulp reexport",
     "build": "npm run gulp build",
+    "link": "npm run build && npm link && npm link rdflib-ts",
     "publish": "npm run gulp publish",
     "test:unit": "nyc mocha test/unit/**/*.ts",
     "test:integration": "nyc mocha test/integration/**/*.ts --timeout 10000",
