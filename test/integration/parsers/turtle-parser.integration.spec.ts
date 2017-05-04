@@ -12,7 +12,7 @@ import { Server } from 'net';
 import { TestHelper } from '../../helpers/test-helper';
 import { TurtleParser } from '../../../src/parsers/turtle-parser';
 
-process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
+process.env.LOCALHOST = process.env.DOCKERHOST || '172.17.0.2';
 
 describe('TurtleParser - Integration', () => {
 	let parser = new TurtleParser();
