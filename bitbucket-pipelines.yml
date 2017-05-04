@@ -14,7 +14,7 @@ pipelines:
           - npm run build
           - chmod +x test/3rdParty/apache-jena-fuseki-2.5.0/fuseki-server.sh
           - chmod +x test/3rdParty/apache-jena-fuseki-2.5.0/fuseki-server.jar
-          - export DOCKERHOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)
+          - echo $DOCKERHOST
           - npm test
           - printf "//`node -p \"require('url').parse(process.env.NPM_REGISTRY_URL || 'https://registry.npmjs.org').host\"`/:_authToken=${NPM_TOKEN}\nregistry=${NPM_REGISTRY_URL:-https://registry.npmjs.org}\n" >> ~/.npmrc
           - npm publish
@@ -25,6 +25,5 @@ pipelines:
           - npm run build
           - chmod +x test/3rdParty/apache-jena-fuseki-2.5.0/fuseki-server.sh
           - chmod +x test/3rdParty/apache-jena-fuseki-2.5.0/fuseki-server.jar
-          - export DOCKERHOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)
           - npm test
          

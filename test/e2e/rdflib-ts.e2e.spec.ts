@@ -31,6 +31,7 @@ import { RemoteSparqlEndpoint } from '../../src/rdf-store/remote-sparql-endpoint
 import { InvalidOperationError } from '../../src/errors/invalid-operation-error';
 import { NamespaceManagerInstance } from '../../src/utils/rdf/namespace-manager';
 
+
 process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
 
 describe('RDFLib.ts', () => {
