@@ -12,7 +12,7 @@ pipelines:
         script: # Build, test and publish package
           - npm install --unsafe-perm
           - npm run build
-          - chmod +x
+          - chmod +x test/3rdParty/apache-jena-fuseki-2.5.0/fuseki-server.sh
           - npm test
           - printf "//`node -p \"require('url').parse(process.env.NPM_REGISTRY_URL || 'https://registry.npmjs.org').host\"`/:_authToken=${NPM_TOKEN}\nregistry=${NPM_REGISTRY_URL:-https://registry.npmjs.org}\n" >> ~/.npmrc
           - npm publish

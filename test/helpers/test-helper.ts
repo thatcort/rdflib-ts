@@ -27,7 +27,7 @@ export class TestHelper {
 	public static async spawnFusekiServerAsync(): Promise<number> {
 		let fusekiDir = path.resolve(process.cwd(), './test/3rdParty/apache-jena-fuseki-2.5.0');
 		let fusekiBase = path.join(fusekiDir, 'run');
-		let fusekiScript = path.join(fusekiDir, 'fuseki-server.bat');
+		let fusekiScript = path.join(fusekiDir, /^win/.test(process.platform) ? 'fuseki-server.bat' : 'fuseki-server.sh');
 
 		process.env.FUSEKI_HOME = fusekiDir;
 		process.env.FUSEKI_BASE = fusekiBase;
