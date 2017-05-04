@@ -8,10 +8,21 @@ chai.should();
 
 import * as fs from 'fs';
 
+import { Server } from 'net';
+import { TestHelper } from '../../helpers/test-helper';
 import { TurtleParser } from '../../../src/parsers/turtle-parser';
 
 describe('TurtleParser - Integration', () => {
 	let parser = new TurtleParser();
+	let staticFileServer: Server;
+
+	before(async () => {
+		staticFileServer = await TestHelper.startStaticFileServerAsync('test/datasets/ttl', 3033);
+	});
+
+	after(async () => {
+		await TestHelper.stopStaticFileServerAsync(staticFileServer);
+	});
 
 	it('should be able to load and parse local turtle file', () => {
 		let testCase1Promise = parser.parseDocumentAsync('test/datasets/ttl/turtleparser_testcase1_10quads.ttl');
@@ -64,9 +75,9 @@ describe('TurtleParser - Integration', () => {
 		]);
 	});
 
-	it('should be able to load and parse remote jsonld file over http protocol', () => {
-		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3033/test/datasets/ttl/turtleparser_testcase1_10quads.ttl');
-		let testCase3Promise = parser.parseDocumentAsync('http://localhost:3033/test/datasets/ttl/turtleparser_testcase3_21quads.trig');
+	it('should be able to load and parse remote turtle file over http protocol', () => {
+		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3033/turtleparser_testcase1_10quads.ttl');
+		let testCase3Promise = parser.parseDocumentAsync('http://localhost:3033/turtleparser_testcase3_21quads.trig');
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
