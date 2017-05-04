@@ -1,4 +1,7 @@
-import { Literal } from '../../model/rdf-core-types';
+import { IRI } from '../../model/iri';
+import { BlankNode } from '../../model/blank-node';
+import { ISparqlQueryResultBinding } from '../../model/sparql-query-result';
+import { Literal, RdfTerm } from '../../model/rdf-core-types';
 import { RdfUtils } from './rdf-utils';
 import { FormatError } from '../../errors/format-error';
 import { LangLiteral } from '../../model/lang-literal';
@@ -23,5 +26,13 @@ export class RdfFactory {
 		} 
 			
 		return new PlainLiteral(value);
+	}
+
+	public static createRdfTermFromSparqlResultBinding(binding: ISparqlQueryResultBinding): RdfTerm {
+		switch (binding.type) {
+			case 'uri': return new IRI(binding.value);
+			case 'bnode': return new BlankNode(binding.value);
+			default: return RdfFactory.createLiteral(binding.value, binding['xml:lang'], binding.datatype);
+		}
 	}
 }

@@ -1,9 +1,4 @@
-import '../utils/promises/promisified';
-
-import * as fs from 'fs';
 import * as n3 from 'n3';
-import * as http from 'superagent';
-import * as streamToString from 'stream-to-string';
 
 import { NQuad } from '../model/n-quad';
 import { ReadStream } from 'fs';
@@ -11,7 +6,6 @@ import { RdfDocumentParser } from './rdf-document-parser';
 import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
 
 export class TurtleParser extends RdfDocumentParser {
-
     public parseStringAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
         return new Promise<NQuad[]>((resolve, reject) => {
             let triples = [];
@@ -53,21 +47,5 @@ export class TurtleParser extends RdfDocumentParser {
                 }
             });
         });
-    }
-
-    public async parseReadableStreamAsync(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-        let documentContent = await streamToString(<ReadStream>document);
-        return this.parseStringAsync(documentContent, quadHandler);
-    }
-
-    public async parseLocalFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-        let documentContent = await fs.readFileAsync(document, 'utf-8');
-        return this.parseStringAsync(documentContent, quadHandler);
-    }
-
-    public async parseRemoteFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-        let response = await http.get(document).buffer()
-        let documentContent = String.fromCharCode.apply(null, response.body);
-        return this.parseStringAsync(documentContent, quadHandler);
     }
 }

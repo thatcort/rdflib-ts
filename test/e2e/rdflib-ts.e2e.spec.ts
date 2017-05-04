@@ -1,3 +1,4 @@
+import { TestHelper } from '../helpers/test-helper';
 import 'mocha';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -38,6 +39,21 @@ describe('RDFLib.ts', () => {
 
 	let defaultGraphDocumentPath = 'test/tmp/serialization/default-graph-dataset.json';
 	let namedGraphDocumentPath = 'test/tmp/serialization/named-graph-dataset.trig';
+
+	let fusekiServerPID;
+
+	before(async () => {
+		fusekiServerPID = await TestHelper.spawnFusekiServerAsync();
+		await TestHelper.createStoreOnFusekiServerAsync('TestDataset1');
+		await TestHelper.createStoreOnFusekiServerAsync('TestDataset2');
+
+	});
+
+	after(async () => {
+		await TestHelper.deleteStoreOnFusekiServerAsync('TestDataset1');
+		await TestHelper.deleteStoreOnFusekiServerAsync('TestDataset2');
+		TestHelper.killProcess(fusekiServerPID);
+	});
 
 	context('RDF model', () => {
 		it('user should be able to create rdf terms with different input styles', () => {

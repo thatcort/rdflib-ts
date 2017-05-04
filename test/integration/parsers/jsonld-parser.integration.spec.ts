@@ -8,10 +8,21 @@ chai.should();
 
 import * as fs from 'fs';
 
+import { Server } from 'net';
+import { TestHelper } from '../../helpers/test-helper';
 import { JsonLDParser } from '../../../src/parsers/jsonld-parser';
 
 describe('JsonLDParser - Integration', () => {
 	let parser = new JsonLDParser();
+	let staticFileServer: Server;
+
+	before(async () => {
+		staticFileServer = await TestHelper.startStaticFileServerAsync('test/datasets/jsonld', 3033);
+	});
+
+	after(async () => {
+		await TestHelper.stopStaticFileServerAsync(staticFileServer);
+	});
 
 	it('should be able to load and parse local jsonld file', () => {
 		let testCase1Promise = parser.parseDocumentAsync('test/datasets/jsonld/jsonldparser_testcase1_10quads.json');
@@ -64,9 +75,9 @@ describe('JsonLDParser - Integration', () => {
 		]);
 	});
 
-	it('should be able to load and parse remote jsonld file over http protocol', () => {
-		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3033/test/datasets/jsonld/jsonldparser_testcase1_10quads.json');
-		let testCase2Promise = parser.parseDocumentAsync('http://localhost:3033/test/datasets/jsonld/jsonldparser_testcase2_21quads.json');
+	it('should be able to load and parse remote jsonld file over http protocol', () => {		
+		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3033/jsonldparser_testcase1_10quads.json');
+		let testCase2Promise = parser.parseDocumentAsync('http://localhost:3033/jsonldparser_testcase2_21quads.json');
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
