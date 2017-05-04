@@ -32,7 +32,7 @@ import { InvalidOperationError } from '../../src/errors/invalid-operation-error'
 import { NamespaceManagerInstance } from '../../src/utils/rdf/namespace-manager';
 
 
-process.env.LOCALHOST = process.env.DOCKERHOST || '172.17.0.2';
+process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
 
 describe('RDFLib.ts', () => {
 

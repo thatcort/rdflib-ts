@@ -12,7 +12,7 @@ import { Server } from 'net';
 import { TestHelper } from '../../helpers/test-helper';
 import { JsonLDParser } from '../../../src/parsers/jsonld-parser';
 
-process.env.LOCALHOST = process.env.DOCKERHOST || '172.17.0.2';
+process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
 
 describe('JsonLDParser - Integration', () => {
 	let parser = new JsonLDParser();
