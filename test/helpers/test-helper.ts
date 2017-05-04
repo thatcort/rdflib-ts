@@ -47,13 +47,14 @@ export class TestHelper {
 	}
 
 	public static async createStoreOnFusekiServerAsync(storeName: string): Promise<void> {
-		await http.post('http://localhost:3030/$/datasets')
+		let host = process.env.DOCKERHOST || 'localhost';
+		await http.post(`http://${process.env.LOCALHOST}:3030/$/datasets`)
 			.send({ dbName: storeName, dbType: 'mem' })
 			.set('Content-Type', 'application/x-www-form-urlencoded');
 	}
 
 	public static async deleteStoreOnFusekiServerAsync(storeName: string): Promise<void> {
-		await http.delete(`http://localhost:3030/$/datasets/${storeName}`);
+		await http.delete(`http://${process.env.LOCALHOST}:3030/$/datasets/${storeName}`);
 	}
 
 	public static async delay(ms: number): Promise<void> {

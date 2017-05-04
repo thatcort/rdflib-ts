@@ -8,6 +8,7 @@ chai.should();
 
 import * as fs from 'fs';
 import * as del from 'del';
+import * as path from 'path';
 
 import { IRI } from '../../src/model/iri';
 import { NQuad } from '../../src/model/n-quad';
@@ -30,6 +31,7 @@ import { RemoteSparqlEndpoint } from '../../src/rdf-store/remote-sparql-endpoint
 import { InvalidOperationError } from '../../src/errors/invalid-operation-error';
 import { NamespaceManagerInstance } from '../../src/utils/rdf/namespace-manager';
 
+process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
 
 describe('RDFLib.ts', () => {
 
@@ -271,8 +273,8 @@ describe('RDFLib.ts', () => {
 
 	context('RDF Store, Import/Export', () => {
 		it('user should be able to import data into remote triple store, query store with SPARQL 1.1 and export data from store', async () => {
-			let store1 = new RemoteSparqlEndpoint('TestDataset1', 'http://localhost:3030');
-			let store2 = new RemoteSparqlEndpoint('TestDataset2', 'http://localhost:3030');
+			let store1 = new RemoteSparqlEndpoint('TestDataset1', `http://${process.env.LOCALHOST}:3030`);
+			let store2 = new RemoteSparqlEndpoint('TestDataset2', `http://${process.env.LOCALHOST}:3030`);
 
 			let importer = new RdfDataImporter();
 			let exporter = new RdfDataExporter();

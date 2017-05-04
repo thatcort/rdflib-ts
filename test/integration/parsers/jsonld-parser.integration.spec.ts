@@ -12,6 +12,8 @@ import { Server } from 'net';
 import { TestHelper } from '../../helpers/test-helper';
 import { JsonLDParser } from '../../../src/parsers/jsonld-parser';
 
+process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
+
 describe('JsonLDParser - Integration', () => {
 	let parser = new JsonLDParser();
 	let staticFileServer: Server;
@@ -76,8 +78,8 @@ describe('JsonLDParser - Integration', () => {
 	});
 
 	it('should be able to load and parse remote jsonld file over http protocol', () => {		
-		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3033/jsonldparser_testcase1_10quads.json');
-		let testCase2Promise = parser.parseDocumentAsync('http://localhost:3033/jsonldparser_testcase2_21quads.json');
+		let testCase1Promise = parser.parseDocumentAsync(`http://${process.env.LOCALHOST}:3033/jsonldparser_testcase1_10quads.json`);
+		let testCase2Promise = parser.parseDocumentAsync(`http://${process.env.LOCALHOST}:3033/jsonldparser_testcase2_21quads.json`);
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,

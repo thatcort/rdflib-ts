@@ -12,6 +12,8 @@ import { Server } from 'net';
 import { TestHelper } from '../../helpers/test-helper';
 import { TurtleParser } from '../../../src/parsers/turtle-parser';
 
+process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
+
 describe('TurtleParser - Integration', () => {
 	let parser = new TurtleParser();
 	let staticFileServer: Server;
@@ -76,8 +78,8 @@ describe('TurtleParser - Integration', () => {
 	});
 
 	it('should be able to load and parse remote turtle file over http protocol', () => {
-		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3033/turtleparser_testcase1_10quads.ttl');
-		let testCase3Promise = parser.parseDocumentAsync('http://localhost:3033/turtleparser_testcase3_21quads.trig');
+		let testCase1Promise = parser.parseDocumentAsync(`http://${process.env.LOCALHOST}:3033/turtleparser_testcase1_10quads.ttl`);
+		let testCase3Promise = parser.parseDocumentAsync(`http://${process.env.LOCALHOST}:3033/turtleparser_testcase3_21quads.trig`);
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
