@@ -195,7 +195,8 @@ console.log(quad.toString()); // _:b1 <http://example.org#knows> _:b2 .
 ```
 
 ##### Parsing/Serializing data
-RDFLib.ts provides `RdfIOManager` class which can be used to parse or serialize RDF data. Currently supported formats are Turtle family formats (.nt, .nq, ttl, trig, n3) which are handled with https://github.com/RubenVerborgh/N3.js library, and JsonLD format handled with https://github.com/digitalbazaar/jsonld.js/ library. Support for RDF/XML will be added later. If you need to handle custom format, appropriate parser/serializer can be registered using `RdfIOManager.registerParser(extension: string, parser: IRdfDocumentParser)` and `RdfIOManager.registerSerializer(extension: string, serializer: IRdfDataSerializer)` methods. If target format is supported, parsing and serialization can be done using `RdfIOManager.parseDocumentAsync(filePath: string, quadHandler?: (quad: NQuad) => void)` and `RdfIOManager.serializeAsync(quads: NQuad[], outFilePath: string)` methods. Both methods are asynchronous and promise based. `quadHandler?: (quad: NQuad) => void` is optional callback function which (if provided), gets called after each parsed quad.  
+RDFLib.ts provides `RdfIOManager` class which can be used to parse or serialize RDF data. Currently supported formats are Turtle family formats (.nt, .nq, ttl, trig) which are handled with https://github.com/RubenVerborgh/N3.js library, and JsonLD format handled with https://github.com/digitalbazaar/jsonld.js/ library. Support for RDF/XML will be added later. If you need to handle custom format, appropriate parser/serializer can be registered using `RdfIOManager.registerParser(extension: string, parser: IRdfDocumentParser)` and `RdfIOManager.registerSerializer(extension: string, serializer: IRdfDataSerializer)` methods. If target format is supported, parsing and serialization can be done using `RdfIOManager.parseDocumentAsync(filePath: string, quadHandler?: (quad: NQuad) => void)` and `RdfIOManager.serializeAsync(quads: NQuad[], outFilePath: string)` methods. Both methods are asynchronous and promise based. `quadHandler?: (quad: NQuad) => void` is optional callback function which (if provided), gets called after each parsed quad.  
+Supported inputs are valid Turtle or JsonLD string, local file, readable stream, or remote file.
 
 ###### Example 1: Parsing and serializing with different formats
 ```typescript
@@ -303,6 +304,7 @@ try {
  
 ###### RdfFactory:
 * `RdFactory.createLiteral(value: string, language?: string, datatype?: string): Literal`
+* `createRdfTermFromSparqlResultBinding(binding: ISparqlQueryResultBinding): RdfTerm`
 
 ##### Custom errors (exceptions)
 RDFLib.ts contains set of custom error classes for handling different error scenarios.
@@ -352,9 +354,13 @@ try {
 
 Want to contribute? Great!
 If you are using Visual Studio Code, there is default development setup in `.vscode` folder. There are configured tasks for compile, test and build, and default launch configuration with `main.ts` as entry point, and compile as pre launch task. Be aware that working directory when debugging is not project root, it it `compiled` directory (directory where compiled .js files reside).
-There is also `keybindings.json` file with custom bindings which you can copy to your local keybinding.json file (File -> Preferences -> Keyboard Shortcuts). It's just 3 shortcuts, `f4` to run tests, `f6` to run build task and `ctrl+k, ctrl+d` to format code.
-After cloning code, run `npm install` to install dependencies, then run `npm run build` to build library and `npm link rdflib-ts` to link library locally for test purposes. 
-To run tests, run `npm test` command. For running integration test, instance of Apache Jena Fuseki 2.5.0 server must be running on port 3030. You can download and run it your self, or you can use docker image specified in `bitbucket-pipelines.yml` file and make sure to have same environment as one used for continuous integration and testing.
+There is also `keybindings.json` file with custom bindings which you can copy to your local keybinding.json file (File -> Preferences -> Keyboard Shortcuts). It's just 3 shortcuts, `f4` to run tests, `f6` to run link (build and npm link) task and `ctrl+k, ctrl+d` to format code.
+After cloning code, run `npm install` to install dependencies, then run `npm run link` to build library and link library locally for test purposes. 
+
+## Testing
+---
+
+To run all tests, run `npm test` command. Different tests can be run separately with `npm run test:unit`, `npm run test:integration` and `npm run test:e2e` commands. 
 
 ## Todos
 ---
@@ -363,7 +369,6 @@ To run tests, run `npm test` command. For running integration test, instance of 
  - Add support for RDF/XML serialization format
  - Reach 100% code coverage
  - Write JSDoc
- - Setup docker containers with fuseki server and static file server for integration and e2e tests
  - Make it browser friendly
 
 License
