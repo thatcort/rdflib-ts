@@ -47,7 +47,6 @@ export class TestHelper {
 	}
 
 	public static async createStoreOnFusekiServerAsync(storeName: string): Promise<void> {
-		let host = process.env.DOCKERHOST || 'localhost';
 		await http.post(`http://${process.env.LOCALHOST}:3030/$/datasets`)
 			.send({ dbName: storeName, dbType: 'mem' })
 			.set('Content-Type', 'application/x-www-form-urlencoded');
