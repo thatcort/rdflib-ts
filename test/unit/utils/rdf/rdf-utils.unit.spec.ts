@@ -249,6 +249,7 @@ describe('RdfUtils - Unit', () => {
 
 		it('should return true for valid lang literal values', () => {
 			RdfUtils.isLangLiteral('"some lang string literal"@en').should.be.true;
+			RdfUtils.isLangLiteral('"some lang string literal"@en-NZ').should.be.true;
 		});
 	});
 

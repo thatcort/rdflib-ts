@@ -16,9 +16,21 @@ describe('LangLiteral - Unit', () => {
 			langLiteral.value.should.equal('English lang literal');
 			langLiteral.language.should.equal('en');
 
+			langLiteral = new LangLiteral('English lang literal', 'en-NZ');
+			langLiteral.value.should.equal('English lang literal');
+			langLiteral.language.should.equal('en-NZ');
+
+			langLiteral = new LangLiteral('"English lang literal"@en-NZ');
+			langLiteral.value.should.equal('English lang literal');
+			langLiteral.language.should.equal('en-NZ');
+
 			langLiteral = new LangLiteral({ type: 'literal' , value: 'German lang literal', 'xml:lang': 'de' });
 			langLiteral.value.should.equal('German lang literal');
 			langLiteral.language.should.equal('de');
+
+			langLiteral = new LangLiteral({ type: 'literal' , value: 'German lang literal', 'xml:lang': 'de-NZ' });
+			langLiteral.value.should.equal('German lang literal');
+			langLiteral.language.should.equal('de-NZ');
 		});
 
 		it('should set English as default language', () => {

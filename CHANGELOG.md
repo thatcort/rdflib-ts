@@ -14,12 +14,16 @@ Sunday, April 30, 2017 - v1.0.1
 ===========================================
 	* Fixed TurtleSerializer bug
 
-Thursday, May 5, 2017 - v1.1.0
+Thursday, May 4, 2017 - v1.1.0
 ===========================================
 	* Added RdfFactory.createRdfTermFromSparqlResultBinding method
 	* Fixed parsing files from remote origin
 	* Added Apache Jena Fuseki 2.5.0 exe to enable integration and e2e tests in pipelines
 
-Thursday, May 5, 2017 - v1.1.1
+Thursday, May 4, 2017 - v1.1.1
 ===========================================
 	* Fixed tree-kill dependency (was not dev dependency)
+
+Friday, May 5, 2017 - v1.1.2
+===========================================
+	* Fixed RdfUtils.isLangLiteral bug to return true for lang tags with dash (en-NZ)

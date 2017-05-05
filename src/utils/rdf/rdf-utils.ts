@@ -94,7 +94,7 @@ export class RdfUtils {
 	}
 
 	public static isLangLiteral(value: string): boolean {
-		return /^"[\s\S]*"@[a-z]+$/i.test(value);
+		return /^"[\s\S]*"@[a-z]+(-[a-z]+)?$/i.test(value);
 	}
 
 	public static isTypedLiteral(value: string): boolean {
