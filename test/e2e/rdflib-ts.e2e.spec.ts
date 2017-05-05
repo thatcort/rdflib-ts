@@ -1,4 +1,3 @@
-import { TestHelper } from '../helpers/test-helper';
 import 'mocha';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -14,6 +13,7 @@ import { IRI } from '../../src/model/iri';
 import { NQuad } from '../../src/model/n-quad';
 import { NTriple } from '../../src/model/n-triple';
 import { BlankNode } from '../../src/model/blank-node';
+import { TestHelper } from '../helpers/test-helper';
 import { FormatError } from '../../src/errors/format-error';
 import { LangLiteral } from '../../src/model/lang-literal';
 import { RdfIOManager } from '../../src/utils/io/rdf-io-manager';
