@@ -27,3 +27,11 @@ Thursday, May 4, 2017 - v1.1.1
 Friday, May 5, 2017 - v1.1.2
 ===========================================
 	* Fixed RdfUtils.isLangLiteral bug to return true for lang tags with dash (en-NZ)
+
+Saturday, May 6, 2017 - v1.1.3
+===========================================
+	* Fixed blank node serialization bug
+
+Saturday, May 6, 2017 - v1.2.0
+===========================================
+	* Added blank node prefixing feature (ability to append prefix on blank node value during rdf data import)
