@@ -35,3 +35,7 @@ Saturday, May 6, 2017 - v1.1.3
 Saturday, May 6, 2017 - v1.2.0
 ===========================================
 	* Added blank node prefixing feature (ability to append prefix on blank node value during rdf data import)
+
+Saturday, May 6, 2017 - v1.2.1
+===========================================
+	* Blank node prefixing feature available at export time

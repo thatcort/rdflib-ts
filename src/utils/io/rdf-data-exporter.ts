@@ -1,10 +1,12 @@
 import { NQuad } from '../../model/n-quad';
 import { RdfStore } from '../../rdf-store/rdf-store';
+import { BlankNode } from '../../model/blank-node';
 import { RdfIOManager } from '../../utils/io/rdf-io-manager';
 import { ArgumentError } from '../../errors/argument-error';
 
 export interface IRdfDataExporterOptions {
 	unskolemize?: boolean;
+	blankNodePrefix?: string;
 }
 
 export class RdfDataExporter {
@@ -26,6 +28,18 @@ export class RdfDataExporter {
 		// Revert blank node replacement if specified in options
 		if (this.options.unskolemize) {
 			quads.forEach(quad => quad.unskolemize());
+		}
+
+		if (this.options.blankNodePrefix) {
+			quads.forEach(quad => {
+				if (quad.subject instanceof BlankNode) {
+					quad.subject.value = `${this.options.blankNodePrefix}${quad.subject.value}`;
+				}
+
+				if (quad.object instanceof BlankNode) {
+					quad.object.value = `${this.options.blankNodePrefix}${quad.object.value}`;
+				}
+			});
 		}
 
 		// if out source specified, it can be rdf store or file path
