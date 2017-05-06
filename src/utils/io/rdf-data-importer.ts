@@ -1,7 +1,7 @@
-import { BlankNode } from '../../model/blank-node';
 import { IRI } from '../../model/iri';
 import { NQuad } from '../../model/n-quad';
 import { RdfStore } from '../../rdf-store/rdf-store';
+import { BlankNode } from '../../model/blank-node';
 import { RdfIOManager } from './rdf-io-manager';
 import { ArgumentError } from '../../errors/argument-error';
 
