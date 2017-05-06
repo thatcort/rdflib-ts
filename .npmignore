@@ -14,3 +14,4 @@ gulpfile.ts
 mocha.opts
 tsconfig.json
 tslint.json
+ts-node-*
