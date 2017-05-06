@@ -35,9 +35,9 @@ export class TurtleSerializer extends RdfDataSerializer {
 			// toString() must be called instead of value property to ensure proper
 			// literal formatting in output
 			quads.forEach(quad => writer.addTriple({
-				subject: quad.subject.value,
+				subject: quad.subject instanceof IRI ? quad.subject.value : quad.subject.toString(),
 				predicate: quad.predicate.value,
-				object: quad.object instanceof IRI || quad.object instanceof BlankNode ? quad.object.value : quad.object.toString(),
+				object: quad.object instanceof IRI ? quad.object.value : quad.object.toString(),
 				graph: quad.graph ? quad.graph.value : undefined
 			}));
 
