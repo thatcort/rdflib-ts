@@ -1,3 +1,4 @@
+import { BlankNode } from '../../model/blank-node';
 import { IRI } from '../../model/iri';
 import { NQuad } from '../../model/n-quad';
 import { RdfStore } from '../../rdf-store/rdf-store';
@@ -8,13 +9,14 @@ export interface IRdfDataImporterOptions {
 	importChunkSize?: number;
 	defaultGraph?: IRI;
 	skolemize?: boolean;
+	blankNodePrefix?: string;
 }
 
 export class RdfDataImporter {
 	public options: IRdfDataImporterOptions;
 
 	public constructor(options: IRdfDataImporterOptions = {}) {
-		this.options = Object.assign({}, { importChunkSize: 1000, skolemize: true }, options);
+		this.options = Object.assign({}, { importChunkSize: 1000, skolemize: false }, options);
 	}
 
 	public async importRdfDataAsync(dataSource: string | NQuad[], targetStore: RdfStore): Promise<void> {
@@ -28,6 +30,18 @@ export class RdfDataImporter {
 			dataSource = await rdfIoManager.parseDocumentAsync(dataSource);
 		}
 
+		if (this.options.blankNodePrefix) {
+			dataSource.forEach(quad => {
+				if (quad.subject instanceof BlankNode) {
+					quad.subject.value = `${this.options.blankNodePrefix}${quad.subject.value}`;
+				}
+
+				if (quad.object instanceof BlankNode) {
+					quad.object.value = `${this.options.blankNodePrefix}${quad.object.value}`;
+				}
+			});
+		}
+
 		// Replace blank nodes with skolem iries
 		if (this.options.skolemize) {
 			dataSource.forEach(quad => quad.skolemize());
@@ -38,8 +52,8 @@ export class RdfDataImporter {
 		// Chunk array and schedule import for every chunk
 		for (let i = 0; i < dataSource.length; i += this.options.importChunkSize) {
 			let chunkForImport = dataSource.slice(i, i + this.options.importChunkSize);
-        	scheduledImports.push(targetStore.importQuadsAsync(chunkForImport));
-   		}
+			scheduledImports.push(targetStore.importQuadsAsync(chunkForImport));
+		}
 
 		// Initialize import in parallel
 		await Promise.all(scheduledImports);

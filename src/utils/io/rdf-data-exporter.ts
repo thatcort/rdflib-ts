@@ -11,7 +11,7 @@ export class RdfDataExporter {
 	public options: IRdfDataExporterOptions;
 
 	public constructor(options: IRdfDataExporterOptions = {}) {
-		this.options = Object.assign({}, { unskolemize: true }, options);
+		this.options = Object.assign({}, { unskolemize: false }, options);
 	}
 
 	public async exportRdfDataAsync(dataSource: RdfStore | NQuad[], outSource?: string | RdfStore): Promise<NQuad[]> {
