@@ -39,3 +39,7 @@ Saturday, May 6, 2017 - v1.2.0
 Saturday, May 6, 2017 - v1.2.1
 ===========================================
 	* Blank node prefixing feature available at export time
+
+Sunday, May 7, 2017 - v1.2.2
+===========================================
+	* URN iri namespace resolution bug fixed
