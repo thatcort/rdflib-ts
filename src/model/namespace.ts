@@ -32,10 +32,12 @@ export class Namespace {
 			throw new ArgumentError('Namespace value can not be null, undefined or empty string');
 		}
 
-		if (!RdfUtils.isUrl(value) && !RdfUtils.isUrn(value)) {
+		if (value.startsWith('urn')) {
+			this._value = value.endsWith(':') ? value : `${value}:`;
+		} else if (RdfUtils.isUrl(value)) {
+			this._value = !value.endsWith('#') && !value.endsWith('/') ? `${value}/` : value;
+		} else {
 			throw new FormatError(`'${value}' is not valid namespace value. It must be valid URN or URL`);
 		}
-
-		this._value = !value.endsWith('#') && !value.endsWith('/') ? `${value}/` : value;
 	}
 }

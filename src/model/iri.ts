@@ -37,8 +37,7 @@ export class IRI {
 			this._namespace = namespace;
 		} else if (RdfUtils.isAbsoluteIRI(value)) {
 			this._value = value.replace(/(^<|>$)/g, '');
-			this.resolveRelativeValue();
-			this.resolveNamespace();
+			this.resolveNamespaceAndRelativeValue();
 		} else {
 			throw new FormatError(`'${value}' is not valid IRI value`);
 		}
@@ -56,17 +55,30 @@ export class IRI {
 		return `<${this.value}>`;
 	}
 
-	private resolveNamespace(): void {
-		if (!this._namespace) {
-			let namespaceValue = this.value.match(/.*(\/#|#|\/)/g)[0].replace(/\/#$/g, '/');
-			this._namespace = NamespaceManagerInstance.getNamespaceByValue(namespaceValue) || NamespaceManagerInstance.generateNamespace(namespaceValue);
-		}
-	}
+	private resolveNamespaceAndRelativeValue(): void {
+		let matches;
+		let namespace: Namespace;
+		let relativeValue: string;
 
-	private resolveRelativeValue(): void {
+
+	    if (RdfUtils.isUrn(this.value)) {
+			matches = this.value.match(/^<?(urn:[a-z0-9][a-z0-9-]{0,31}):([a-z0-9()+,\-.:=@;$_!*\'%/?#]+)>?$/i); 
+			namespace = NamespaceManagerInstance.registerNamespace(matches[1], matches[1]);
+			relativeValue = matches[2];
+
+		} else {
+			matches = this.value.match(/^(.*)(\/#|#|\/)(.*$)/i); 
+			let namespaceValue = matches[2] === '#' && !matches[1].endsWith('/') ? `${matches[1]}#` : matches[1];
+			namespace = NamespaceManagerInstance.getNamespaceByValue(namespaceValue) || NamespaceManagerInstance.generateNamespace(namespaceValue)
+			relativeValue = matches[2] === '#' && matches[1].endsWith('/') ? `#${matches[3]}` : matches[3];
+		}
+
+		if (!this._namespace) {
+			this._namespace = namespace;
+		}
+
 		if (!this._relativeValue) {
-			let relativeValue = this.value.match(/(?!.*(\/#|#|\/)).+/g)[0];
-			this._relativeValue = /\/#/g.test(this.value) ? `#${relativeValue}` : relativeValue;
+			this._relativeValue = relativeValue;
 		}
 	}
 
