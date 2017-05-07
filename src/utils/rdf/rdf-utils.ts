@@ -102,7 +102,10 @@ export class RdfUtils {
 	}
 
 	public static escapeLiteral(value: string): string {
-		return value.replace(/((?:\\)*)\\(?!\\\\)/g, '\\\\').replace(/"/g, '\\"');
+		return value.replace(/\n/g, '\\n')
+					.replace(/\t/g, '\\t')
+					.replace(/((?:\\)*)\\(?!\\\\)/g, '\\\\')
+					.replace(/"/g, '\\"');
 	}
 
 	public static isSparqlResultBinding(value: any): value is ISparqlQueryResultBinding {

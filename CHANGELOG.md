@@ -43,3 +43,7 @@ Saturday, May 6, 2017 - v1.2.1
 Sunday, May 7, 2017 - v1.2.2
 ===========================================
 	* URN iri namespace resolution bug fixed
+
+Sunday, May 7, 2017 - v1.2.3
+===========================================
+	* Added escaping \n and \t in literals
