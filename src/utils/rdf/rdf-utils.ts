@@ -66,7 +66,7 @@ export class RdfUtils {
 	}
 
 	public static isLocalFilePath(value: string): boolean {
-		return /^([A-Z]:)?((\\|\/)?[A-Z0-9-_]+[A-Z0-9-_ \t])+\.[a-z]+$/gi.test(value);
+		return /^([A-Z]:)?((\\|\/)?[A-Z0-9-_\.]+[A-Z0-9-_ \t\.])+\.[a-z]+$/gi.test(value);
 	}
 
 	public static isAbsoluteIRI(value: string): boolean {

@@ -42,7 +42,7 @@ export class TestHelper {
 			}).pid;
 
 		// Give server time to get up and running
-		await TestHelper.delay(4000);
+		await TestHelper.delay(6000);
 		return pid;
 	}
 

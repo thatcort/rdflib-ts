@@ -47,3 +47,7 @@ Sunday, May 7, 2017 - v1.2.2
 Sunday, May 7, 2017 - v1.2.3
 ===========================================
 	* Added escaping \n and \t in literals
+
+Tuesday, May 9, 2017 - v1.2.4
+===========================================
+	* RdfUtils.isLocalFilePath recognizes paths with dots

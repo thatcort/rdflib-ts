@@ -140,6 +140,7 @@ describe('RdfUtils - Unit', () => {
 			RdfUtils.isLocalFilePath('file.txt').should.be.true;
 			RdfUtils.isLocalFilePath('/some/path/file.tsx').should.be.true;
 			RdfUtils.isLocalFilePath('D:/test/files/file.json').should.be.true;
+			RdfUtils.isLocalFilePath('C:/Users/vladimir.djurdjevic/Desktop/shacl_validation/some_dataset_v3.0.0.ttl').should.be.true;
 		});
 	});
 
