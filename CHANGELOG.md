@@ -51,3 +51,7 @@ Sunday, May 7, 2017 - v1.2.3
 Tuesday, May 9, 2017 - v1.2.4
 ===========================================
 	* RdfUtils.isLocalFilePath recognizes paths with dots
+
+Wednesday, May 10, 2017 - v1.2.5
+===========================================
+	* Added missing mkdirp dependency

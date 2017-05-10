@@ -1,6 +1,6 @@
 {
   "name": "rdflib-ts",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
   "homepage": "https://bitbucket.org/vladimir_djurdjevic/rdflib.ts",
   "keywords": [
@@ -80,6 +80,7 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "jsonld": "^0.4.11",
+    "mkdirp": "^0.5.1",
     "n3": "^0.10.0",
     "sparql-client-2": "^0.6.1",
     "stream-to-string": "^1.1.0",
