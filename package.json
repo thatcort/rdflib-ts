@@ -1,8 +1,8 @@
 {
   "name": "rdflib-ts",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
-  "homepage": "https://bitbucket.org/vladimir_djurdjevic/rdflib.ts",
+  "homepage": "https://github.com/vladimirdjurdjevic/rdflib-ts",
   "keywords": [
     "rdf",
     "sparql",
@@ -11,12 +11,12 @@
   "author": "Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://bitbucket.org/vladimir_djurdjevic/rdflib.ts/issues",
+    "url": "https://github.com/vladimirdjurdjevic/rdflib-ts/issues",
     "email": "vladimirdjurdjevic93@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://vladimir_djurdjevic@bitbucket.org/vladimir_djurdjevic/rdflib.ts.git"
+    "url": "https://github.com/vladimirdjurdjevic/rdflib-ts.git"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
