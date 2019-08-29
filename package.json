@@ -1,6 +1,6 @@
 {
   "name": "rdflib-ts",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
   "homepage": "https://github.com/vladimirdjurdjevic/rdflib-ts",
   "keywords": [
@@ -32,7 +32,6 @@
     "compile": "npm run tsc && npm run copy:datasets",
     "build": "npm run gulp build",
     "link": "npm run build && npm link && npm link rdflib-ts",
-    "publish": "npm run gulp publish",
     "test:unit": "nyc mocha test/unit/**/*.ts",
     "test:integration": "nyc mocha test/integration/**/*.ts --timeout 10000",
     "test:e2e": "nyc mocha test/e2e/**/*.ts --timeout 10000",
@@ -81,7 +80,7 @@
     "bluebird": "^3.5.0",
     "jsonld": "^0.4.11",
     "mkdirp": "^0.5.1",
-    "n3": "^0.10.0",
+    "n3": "0.10.0",
     "sparql-client-2": "^0.6.1",
     "stream-to-string": "^1.1.0",
     "superagent": "^3.5.2"
