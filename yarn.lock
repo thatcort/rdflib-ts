@@ -119,10 +119,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@dry-stack/devtools@1.2.58":
-  version "1.2.58"
-  resolved "https://registry.yarnpkg.com/@dry-stack/devtools/-/devtools-1.2.58.tgz#4fcfa15ddbdd3af6275f60af22348ed0816b133d"
-  integrity sha512-PvzK7bSwPgb0MYFIvXKbIngxjlDqK7/+X9tBI7ww0mbdhnUIckyXqQ8AuDd7g0x9Z8X/xchu8J68n7nNcbNN/w==
+"@dry-stack/devtools@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@dry-stack/devtools/-/devtools-2.0.2.tgz#b1b5f837f09505893f92f3a1e7b6ec53a05d3101"
+  integrity sha512-u5U66BTlQY5S+kyGcZzrMrZklO7L79+QqERr+qQ8Eb6y/K3C3gCSn9WBSbfLid351qQOTvqe3gz8m0I03bJB6g==
   dependencies:
     "@types/node" "12.7.3"
     "@typescript-eslint/eslint-plugin" "2.0.0"
@@ -144,10 +144,10 @@
     typescript "3.5.3"
     wait-port "0.2.2"
 
-"@dry-stack/testing@1.2.57":
-  version "1.2.57"
-  resolved "https://registry.yarnpkg.com/@dry-stack/testing/-/testing-1.2.57.tgz#59083072171342dc13f1eaa571fc7da674de3536"
-  integrity sha512-owY7sW0Nek0QzdrU95Xz6pBi4PGXlkDOXJv6AOhv8RUTFDKKYh1Vv9VnXK3Dg3N+f7SO5bZcw3aiMAgRsbjAQA==
+"@dry-stack/testing@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@dry-stack/testing/-/testing-2.0.2.tgz#1c0c1416d3aff194cd15ffde0e7798f7b9ffa2c8"
+  integrity sha512-5e0dnM1reP/CO2WLDEgNN/SRyxhb+VtcntstVHXuQGCgn2QEoGnSTEoQpd4Ka+4rK6OydMlS4sgM3bUfprIAbA==
   dependencies:
     "@types/chai" "4.2.0"
     "@types/chai-as-promised" "7.1.2"

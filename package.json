@@ -12,9 +12,6 @@
 	"homepage": "https://github.com/vladimirdjurdjevic/rdflib-ts",
 	"repository": "https://github.com/vladimirdjurdjevic/rdflib-ts.git",
 	"bugs": "https://github.com/vladimirdjurdjevic/rdflib-ts/issues",
-	"workspaces": [
-		"."
-	],
 	"publishConfig": {
 		"access": "public"
 	},
@@ -40,8 +37,8 @@
 		"superagent": "5.1.0"
 	},
 	"devDependencies": {
-		"@dry-stack/devtools": "1.2.58",
-		"@dry-stack/testing": "1.2.57",
+		"@dry-stack/devtools": "2.0.2",
+		"@dry-stack/testing": "2.0.2",
 		"express": "4.17.1"
 	},
 	"gitHead": "fcc2ef8615d159a076015bed7083bd254221d78a"
