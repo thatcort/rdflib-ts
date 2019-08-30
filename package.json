@@ -1,6 +1,6 @@
 {
 	"name": "rdflib-ts",
-	"version": "1.2.57",
+	"version": "1.2.58",
 	"author": "Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>",
 	"license": "MIT",
 	"description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
