@@ -3,7 +3,7 @@
 	"version": "1.2.55",
 	"author": "Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>",
 	"license": "MIT",
-	"description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
+	"description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support",
 	"keywords": [
 		"rdf",
 		"sparql",
@@ -18,7 +18,6 @@
 		"url": "https://github.com/vladimirdjurdjevic/rdflib-ts/issues",
 		"email": "vladimirdjurdjevic93@gmail.com"
 	},
-	"private": true,
 	"workspaces": [
 		"."
 	],
