@@ -37,7 +37,9 @@ export class Namespace {
 		} else if (RdfUtils.isUrl(value)) {
 			this._value = !value.endsWith('#') && !value.endsWith('/') ? `${value}/` : value;
 		} else {
-			throw new FormatError(`'${value}' is not valid namespace value. It must be valid URN or URL`);
+			throw new FormatError(
+				`'${value}' is not valid namespace value. It must be valid URN or URL`
+			);
 		}
 	}
 }

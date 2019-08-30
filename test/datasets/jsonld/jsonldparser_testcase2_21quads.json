@@ -1,74 +1,74 @@
 {
-  "@id": "http://example.org#namedGraph",
-  "@graph": [
-    {
-      "@id": "_:b0",
-      "http://www.w3.org/ns/shacl#datatype": {
-        "@id": "http://www.w3.org/2001/XMLSchema#string"
-      },
-      "http://www.w3.org/ns/shacl#maxCount": 1,
-      "http://www.w3.org/ns/shacl#path": {
-        "@id": "http://example.org#ssn"
-      },
-      "http://www.w3.org/ns/shacl#pattern": "^\\\\d{3}-\\\\d{2}-\\\\d{4}$"
-    },
-    {
-      "@id": "_:b1",
-      "http://www.w3.org/ns/shacl#class": {
-        "@id": "http://example.org#Person"
-      },
-      "http://www.w3.org/ns/shacl#nodeKind": {
-        "@id": "http://www.w3.org/ns/shacl#IRI"
-      },
-      "http://www.w3.org/ns/shacl#path": {
-        "@id": "http://example.org#child"
-      }
-    },
-    {
-      "@id": "_:b2",
-      "http://www.w3.org/2000/01/rdf-schema#comment": "A person's parents are represented via ex:child used in the inverse direction.",
-      "http://www.w3.org/ns/shacl#maxCount": 2,
-      "http://www.w3.org/ns/shacl#name": "parent",
-      "http://www.w3.org/ns/shacl#path": {
-        "@id": "_:b3"
-      }
-    },
-    {
-      "@id": "_:b3",
-      "http://www.w3.org/ns/shacl#inversePath": {
-        "@id": "http://example.org#child"
-      }
-    },
-    {
-      "@id": "_:b4",
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-      },
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"
-      }
-    },
-    {
-      "@id": "http://example.org#PersonShape",
-      "@type": "http://www.w3.org/ns/shacl#NodeShape",
-      "http://www.w3.org/ns/shacl#closed": true,
-      "http://www.w3.org/ns/shacl#ignoredProperties": {
-        "@id": "_:b4"
-      },
-      "http://www.w3.org/ns/shacl#property": [
-        {
-          "@id": "_:b0"
-        },
-        {
-          "@id": "_:b1"
-        },
-        {
-          "@id": "_:b2"
-        }
-      ],
-      "http://www.w3.org/ns/shacl#targetClass": {
-        "@id": "http://example.org#Person"
-      }
-    }
-  ]
+	"@id": "http://example.org#namedGraph",
+	"@graph": [
+		{
+			"@id": "_:b0",
+			"http://www.w3.org/ns/shacl#datatype": {
+				"@id": "http://www.w3.org/2001/XMLSchema#string"
+			},
+			"http://www.w3.org/ns/shacl#maxCount": 1,
+			"http://www.w3.org/ns/shacl#path": {
+				"@id": "http://example.org#ssn"
+			},
+			"http://www.w3.org/ns/shacl#pattern": "^\\\\d{3}-\\\\d{2}-\\\\d{4}$"
+		},
+		{
+			"@id": "_:b1",
+			"http://www.w3.org/ns/shacl#class": {
+				"@id": "http://example.org#Person"
+			},
+			"http://www.w3.org/ns/shacl#nodeKind": {
+				"@id": "http://www.w3.org/ns/shacl#IRI"
+			},
+			"http://www.w3.org/ns/shacl#path": {
+				"@id": "http://example.org#child"
+			}
+		},
+		{
+			"@id": "_:b2",
+			"http://www.w3.org/2000/01/rdf-schema#comment": "A person's parents are represented via ex:child used in the inverse direction.",
+			"http://www.w3.org/ns/shacl#maxCount": 2,
+			"http://www.w3.org/ns/shacl#name": "parent",
+			"http://www.w3.org/ns/shacl#path": {
+				"@id": "_:b3"
+			}
+		},
+		{
+			"@id": "_:b3",
+			"http://www.w3.org/ns/shacl#inversePath": {
+				"@id": "http://example.org#child"
+			}
+		},
+		{
+			"@id": "_:b4",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#first": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+			},
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"
+			}
+		},
+		{
+			"@id": "http://example.org#PersonShape",
+			"@type": "http://www.w3.org/ns/shacl#NodeShape",
+			"http://www.w3.org/ns/shacl#closed": true,
+			"http://www.w3.org/ns/shacl#ignoredProperties": {
+				"@id": "_:b4"
+			},
+			"http://www.w3.org/ns/shacl#property": [
+				{
+					"@id": "_:b0"
+				},
+				{
+					"@id": "_:b1"
+				},
+				{
+					"@id": "_:b2"
+				}
+			],
+			"http://www.w3.org/ns/shacl#targetClass": {
+				"@id": "http://example.org#Person"
+			}
+		}
+	]
 }

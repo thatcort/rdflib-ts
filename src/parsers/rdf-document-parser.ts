@@ -10,52 +10,78 @@ import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { ReadStream } from 'fs';
 import { ArgumentError } from '../errors/argument-error';
 
-export interface IRdfDocumentParser {
+export interface RdfDocumentParser {
 	parseStringAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
-	parseReadableStreamAsync?(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+	parseReadableStreamAsync?(
+		document: ReadStream,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]>;
 
 	parseLocalFileAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
 	parseRemoteFileAsync?(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
 
-	parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+	parseDocumentAsync(
+		document: string | ReadStream,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]>;
 }
 
-export abstract class RdfDocumentParser implements IRdfDocumentParser {
-	public abstract parseStringAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]>;
+export class BaseRdfDocumentParser implements RdfDocumentParser {
+	public async parseStringAsync(
+		document: string,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]> {
+		return [];
+	}
 
-	public async parseReadableStreamAsync(document: ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-        let documentContent = await streamToString(document);
-        return this.parseStringAsync(documentContent, quadHandler);
-    }
+	public async parseReadableStreamAsync(
+		document: ReadStream,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]> {
+		const documentContent = await streamToString(document);
+		return this.parseStringAsync(documentContent, quadHandler);
+	}
 
-    public async parseLocalFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-        let documentContent = await fs.readFileAsync(document, 'utf-8');
-        return this.parseStringAsync(documentContent, quadHandler);
-    }
+	public async parseLocalFileAsync(
+		document: string,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]> {
+		const documentContent = await fs.readFileAsync(document, 'utf-8');
+		return this.parseStringAsync(documentContent, quadHandler);
+	}
 
-	public async parseRemoteFileAsync(document: string, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
-        let response = await http.get(document).buffer();
+	public async parseRemoteFileAsync(
+		document: string,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]> {
+		const response = await http.get(document).buffer();
 
-        let documentContent: string;
-        if (response.type.startsWith('text/')) {
-            documentContent = response.text;
-        } else if (response.type === 'application/octet-stream') {
-            documentContent = String.fromCharCode.apply(null, response.body)
-        } else if (response.type === 'application/json') {
-            documentContent = JSON.stringify(response.body);
-        } else {
-			throw new NotSupportedError(`Content type: '${response.type}' is not supported for remote documents`);
+		let documentContent: string;
+		if (response.type.startsWith('text/')) {
+			documentContent = response.text;
+		} else if (response.type === 'application/octet-stream') {
+			documentContent = String.fromCharCode.apply(null, response.body);
+		} else if (response.type === 'application/json') {
+			documentContent = JSON.stringify(response.body);
+		} else {
+			throw new NotSupportedError(
+				`Content type: '${response.type}' is not supported for remote documents`
+			);
 		}
 
-        return this.parseStringAsync(documentContent, quadHandler);
-    }
-	public async parseDocumentAsync(document: string | ReadStream, quadHandler?: (quad: NQuad) => void): Promise<NQuad[]> {
+		return this.parseStringAsync(documentContent, quadHandler);
+	}
+
+	public async parseDocumentAsync(
+		document: string | ReadStream,
+		quadHandler?: (quad: NQuad) => void
+	): Promise<NQuad[]> {
 		if (!document) {
 			throw new ArgumentError('Document can not be null, undefined or empty string');
-		} 
-		
+		}
+
 		if (typeof document !== 'string') {
 			return this.parseReadableStreamAsync(document, quadHandler);
 		} else if (document.startsWith('http://')) {

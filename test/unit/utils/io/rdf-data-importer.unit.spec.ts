@@ -1,10 +1,3 @@
-import 'mocha';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-
-chai.use(chaiAsPromised);
-chai.should();
-
 import { IRI } from '../../../../src/model/iri';
 import { RdfDataImporter } from '../../../../src/utils/io/rdf-data-importer';
 
@@ -36,7 +29,11 @@ describe('RdfDataImporter - Unit', () => {
 			exporter.options.importChunkSize.should.equal(666);
 			exporter.options.should.not.haveOwnProperty('defaultGraph');
 
-			exporter = new RdfDataImporter({ skolemize: false, importChunkSize: 666, defaultGraph: new IRI('rdf:defaultGraph') });
+			exporter = new RdfDataImporter({
+				skolemize: false,
+				importChunkSize: 666,
+				defaultGraph: new IRI('rdf:defaultGraph')
+			});
 			exporter.options.skolemize.should.be.false;
 			exporter.options.importChunkSize.should.equal(666);
 			exporter.options.defaultGraph.relativeValue.should.equal('defaultGraph');

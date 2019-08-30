@@ -1,40 +1,37 @@
 {
-  "@context": {
-    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "ex": "http://example.org#"
-  },
-  "@graph": [
-    {
-      "@id": "ex:Alice",
-      "@type": "ex:Person",
-      "ex:child": {
-        "@id": "ex:Calvin"
-      },
-      "ex:ssn": "987-65-432A",
-      "ex:about": {
-        "@value": "Alice is some random girl for rdf data testing",
-        "@language": "en"
-      }
-    },
-    {
-      "@id": "ex:Bob",
-      "@type": "ex:Person",
-      "ex:child": {
-        "@id": "ex:Calvin"
-      },
-      "ex:ssn": [
-        "123-45-6789",
-        "124-35-6789"
-      ]
-    },
-    {
-      "@id": "ex:Calvin",
-      "@type": "ex:Person",
-      "ex:school": {
-        "@id": "ex:TrinityAnglicanSchool"
-      }
-    }
-  ]
+	"@context": {
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+		"ex": "http://example.org#"
+	},
+	"@graph": [
+		{
+			"@id": "ex:Alice",
+			"@type": "ex:Person",
+			"ex:child": {
+				"@id": "ex:Calvin"
+			},
+			"ex:ssn": "987-65-432A",
+			"ex:about": {
+				"@value": "Alice is some random girl for rdf data testing",
+				"@language": "en"
+			}
+		},
+		{
+			"@id": "ex:Bob",
+			"@type": "ex:Person",
+			"ex:child": {
+				"@id": "ex:Calvin"
+			},
+			"ex:ssn": ["123-45-6789", "124-35-6789"]
+		},
+		{
+			"@id": "ex:Calvin",
+			"@type": "ex:Person",
+			"ex:school": {
+				"@id": "ex:TrinityAnglicanSchool"
+			}
+		}
+	]
 }

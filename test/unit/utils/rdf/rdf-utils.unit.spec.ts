@@ -1,8 +1,3 @@
-import 'mocha';
-import * as chai from 'chai';
-
-let should = chai.should();
-
 import { RdfUtils } from '../../../../src/utils/rdf/rdf-utils';
 
 describe('RdfUtils - Unit', () => {
@@ -61,7 +56,9 @@ describe('RdfUtils - Unit', () => {
 			RdfUtils.isUrl('http://a.b-c.de').should.be.true;
 			RdfUtils.isUrl('http://223.255.255.254').should.be.true;
 			RdfUtils.isUrl('www.example.org').should.be.true;
-			RdfUtils.isUrl('http://localhost:3033/test/datasets/jsonld/shacl_1_4_example_data_graph.json').should.be.true;
+			RdfUtils.isUrl(
+				'http://localhost:3033/test/datasets/jsonld/shacl_1_4_example_data_graph.json'
+			).should.be.true;
 			RdfUtils.isUrl('file://localhost/c:/WINDOWS/clock.avi').should.be.true;
 			RdfUtils.isUrl('file:///c:/WINDOWS/clock.avi').should.be.true;
 		});
@@ -123,8 +120,10 @@ describe('RdfUtils - Unit', () => {
 			RdfUtils.isUrn('urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66').should.be.true;
 			RdfUtils.isUrn('urn:nbn:de:bvb:19-146642').should.be.true;
 			RdfUtils.isUrn('urn:lex:eu:council:directive:2010-03-09;2010-19-UE').should.be.true;
-			RdfUtils.isUrn('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C').should.be.true;
-			RdfUtils.isUrn('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>').should.be.true;
+			RdfUtils.isUrn('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C').should
+				.be.true;
+			RdfUtils.isUrn('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>').should
+				.be.true;
 		});
 	});
 
@@ -140,7 +139,9 @@ describe('RdfUtils - Unit', () => {
 			RdfUtils.isLocalFilePath('file.txt').should.be.true;
 			RdfUtils.isLocalFilePath('/some/path/file.tsx').should.be.true;
 			RdfUtils.isLocalFilePath('D:/test/files/file.json').should.be.true;
-			RdfUtils.isLocalFilePath('C:/Users/vladimir.djurdjevic/Desktop/shacl_validation/some_dataset_v3.0.0.ttl').should.be.true;
+			RdfUtils.isLocalFilePath(
+				'C:/Users/vladimir.djurdjevic/Desktop/shacl_validation/some_dataset_v3.0.0.ttl'
+			).should.be.true;
 		});
 	});
 
@@ -155,7 +156,8 @@ describe('RdfUtils - Unit', () => {
 
 		it('should return true for valid absolute IRI values', () => {
 			RdfUtils.isAbsoluteIRI('http://example.org/#Alice').should.be.true;
-			RdfUtils.isAbsoluteIRI('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C').should.be.true;
+			RdfUtils.isAbsoluteIRI('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C')
+				.should.be.true;
 		});
 	});
 
@@ -184,8 +186,10 @@ describe('RdfUtils - Unit', () => {
 		it('should return true for valid IRI values', () => {
 			RdfUtils.isIRI('http://example.org/#Alice').should.be.true;
 			RdfUtils.isIRI('<http://example.org/#Alice>').should.be.true;
-			RdfUtils.isIRI('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C').should.be.true;
-			RdfUtils.isIRI('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>').should.be.true;
+			RdfUtils.isIRI('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C').should
+				.be.true;
+			RdfUtils.isIRI('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>').should
+				.be.true;
 			RdfUtils.isIRI('ex:#Alice').should.be.true;
 		});
 	});
@@ -194,8 +198,10 @@ describe('RdfUtils - Unit', () => {
 		it('should return false for non skolemized but valid IRI values', () => {
 			RdfUtils.isSkolemIRI('http://example.org/#Alice').should.be.false;
 			RdfUtils.isSkolemIRI('<http://example.org/#Alice>').should.be.false;
-			RdfUtils.isSkolemIRI('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C').should.be.false;
-			RdfUtils.isSkolemIRI('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>').should.be.false;
+			RdfUtils.isSkolemIRI('urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C')
+				.should.be.false;
+			RdfUtils.isSkolemIRI('<urn:lsid:zoobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C>')
+				.should.be.false;
 			RdfUtils.isSkolemIRI('ex:#Alice').should.be.false;
 		});
 
@@ -267,14 +273,19 @@ describe('RdfUtils - Unit', () => {
 
 		it('should return true for valid typed literal values', () => {
 			RdfUtils.isTypedLiteral('"true"^^xsd:boolean').should.be.true;
-			RdfUtils.isTypedLiteral('"true"^^<http://www.w3.org/2001/XMLSchema#boolean>').should.be.true;
+			RdfUtils.isTypedLiteral('"true"^^<http://www.w3.org/2001/XMLSchema#boolean>').should.be
+				.true;
 		});
 	});
 
 	context('escapeLiteral', () => {
 		it('should escape unescaped back slashes and quotes', () => {
-			RdfUtils.escapeLiteral('^\\d{3}-\\d{2}-\\d{4}$').should.equal('^\\\\d{3}-\\\\d{2}-\\\\d{4}$');
-			RdfUtils.escapeLiteral('^\\\\d{3}-\\\\d{2}-\\\\d{4}$').should.equal('^\\\\d{3}-\\\\d{2}-\\\\d{4}$');
+			RdfUtils.escapeLiteral('^\\d{3}-\\d{2}-\\d{4}$').should.equal(
+				'^\\\\d{3}-\\\\d{2}-\\\\d{4}$'
+			);
+			RdfUtils.escapeLiteral('^\\\\d{3}-\\\\d{2}-\\\\d{4}$').should.equal(
+				'^\\\\d{3}-\\\\d{2}-\\\\d{4}$'
+			);
 		});
 	});
 

@@ -1,12 +1,12 @@
 import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { ArgumentError } from '../errors/argument-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
-import { ISparqlQueryResultBinding } from './sparql-query-result';
+import { SparqlQueryResultBinding } from './sparql-query-result';
 
 export class PlainLiteral {
 	protected _value: string;
 
-	public constructor(value: string | ISparqlQueryResultBinding) {
+	public constructor(value: string | SparqlQueryResultBinding) {
 		this.value = this.resolveLiteralValue(value);
 	}
 
@@ -26,14 +26,16 @@ export class PlainLiteral {
 		return `"${RdfUtils.escapeLiteral(this.value)}"`;
 	}
 
-	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding): string {
+	protected resolveLiteralValue(value: string | SparqlQueryResultBinding): string {
 		if (!value) {
 			throw new ArgumentError('IRI value can not be null, undefined or empty string');
 		}
-		
+
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'literal' || !!value.datatype || !!value['xml:lang']) {
-				throw new InvalidOperationError(`Can not create plain literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`);
+				throw new InvalidOperationError(
+					`Can not create plain literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`
+				);
 			}
 
 			return value.value;

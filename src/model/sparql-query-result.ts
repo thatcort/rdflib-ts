@@ -1,32 +1,31 @@
-export interface ISparqlQueryResultHead {
-    link?: string[],
-    vars?: string[]
+export interface SparqlQueryResultHead {
+	link?: string[];
+	vars?: string[];
 }
 
-export interface ISparqlQueryResultBinding {
-    type: 'uri' | 'bnode' | 'literal' | 'typed-literal',
-    value: string,
-    datatype?: string,
-    'xml:lang'?: string
+export interface SparqlQueryResultBinding {
+	type: 'uri' | 'bnode' | 'literal' | 'typed-literal';
+	value: string;
+	datatype?: string;
+	'xml:lang'?: string;
 }
 
-export interface ISparqlQueryResults<TResult> {
-    bindings: TResult[]
+export interface SparqlQueryResults<TResult> {
+	bindings: TResult[];
 }
 
-export interface ISparqlQueryResult<TResult> {
-    head?: ISparqlQueryResultHead,
-    boolean?: boolean,
-    results?: ISparqlQueryResults<TResult>
+export interface SparqlQueryResult<TResult> {
+	head?: SparqlQueryResultHead;
+	boolean?: boolean;
+	results?: SparqlQueryResults<TResult>;
 }
 
-export interface ITripleQueryResult {
-    subject?: ISparqlQueryResultBinding,
-    predicate?: ISparqlQueryResultBinding,
-    object?: ISparqlQueryResultBinding
+export interface TripleQueryResult {
+	subject?: SparqlQueryResultBinding;
+	predicate?: SparqlQueryResultBinding;
+	object?: SparqlQueryResultBinding;
 }
 
-export interface IQuadQueryResult extends ITripleQueryResult {
-    graph?: ISparqlQueryResultBinding
+export interface QuadQueryResult extends TripleQueryResult {
+	graph?: SparqlQueryResultBinding;
 }
-

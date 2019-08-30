@@ -1,14 +1,19 @@
 import { IRI } from './iri';
 import { NTriple } from './n-triple';
-import { RdfUtils } from '../utils/rdf/rdf-utils';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
-import { ISparqlQueryResultBinding } from './sparql-query-result';
+import { SparqlQueryResultBinding } from './sparql-query-result';
 import { RdfObject, RdfPredicate, RdfSubject } from './rdf-core-types';
+import { RdfUtils } from '../utils/rdf/rdf-utils';
 
 export class NQuad extends NTriple {
 	public graph: IRI;
 
-	public constructor(subject: string | RdfSubject | ISparqlQueryResultBinding, predicate: string | RdfPredicate | ISparqlQueryResultBinding, object: string | RdfObject | ISparqlQueryResultBinding, graph?: string | IRI | ISparqlQueryResultBinding) {
+	public constructor(
+		subject: string | RdfSubject | SparqlQueryResultBinding,
+		predicate: string | RdfPredicate | SparqlQueryResultBinding,
+		object: string | RdfObject | SparqlQueryResultBinding,
+		graph?: string | IRI | SparqlQueryResultBinding
+	) {
 		super(subject, predicate, object);
 
 		if (graph) {
@@ -20,7 +25,7 @@ export class NQuad extends NTriple {
 		return this.graph ? super.toString().replace(/\.$/, `${this.graph} .`) : super.toString();
 	}
 
-	private resolveGraphValue(value: string | IRI | ISparqlQueryResultBinding): IRI {
+	private resolveGraphValue(value: string | IRI | SparqlQueryResultBinding): IRI {
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type !== 'uri') {
 				throw new InvalidOperationError('Rdf graph must be uri');
@@ -34,7 +39,7 @@ export class NQuad extends NTriple {
 				return new IRI(value);
 			} else {
 				throw new InvalidOperationError('Rdf graph must be uri');
-			} 
+			}
 		}
 
 		return value;

@@ -1,5 +1,4 @@
 import { Namespace } from '../../model/namespace';
-import { InvalidOperationError } from '../../errors/invalid-operation-error';
 
 export class NamespaceManager {
 	public readonly coreNamespaces: Namespace[];
@@ -12,7 +11,10 @@ export class NamespaceManager {
 		this.registerNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 		this.registerNamespace('rdfs', 'http://www.w3.org/2000/01/rdf-schema#');
 		this.registerNamespace('xsd', 'http://www.w3.org/2001/XMLSchema#');
-		this.registerNamespace('skolem', 'https://bitbucket.org/vladimir_djurdjevic/rdflib.ts/.well-known/genid/');
+		this.registerNamespace(
+			'skolem',
+			'https://bitbucket.org/vladimir_djurdjevic/rdflib.ts/.well-known/genid/'
+		);
 	}
 
 	public getAllNamespaces(): Namespace[] {
@@ -21,18 +23,23 @@ export class NamespaceManager {
 
 	public getNamespace(prefix: string, value: string): Namespace {
 		let namespace = null;
-		let valueRegex = new RegExp(`^${value}\/?$`);
+		const valueRegex = new RegExp(`^${value}/?$`);
 
 		// Based on input combination, match by both prefix and value
 		// or just prefix or just value
 		if (prefix && value) {
-			namespace = this.coreNamespaces.find(ns => ns.prefix === prefix && valueRegex.test(ns.value)) ||
-				this.generatedNamespaces.find(ns => ns.prefix === prefix && valueRegex.test(ns.value));
+			namespace =
+				this.coreNamespaces.find(ns => ns.prefix === prefix && valueRegex.test(ns.value)) ||
+				this.generatedNamespaces.find(
+					ns => ns.prefix === prefix && valueRegex.test(ns.value)
+				);
 		} else if (prefix) {
-			namespace = this.coreNamespaces.find(ns => ns.prefix === prefix) ||
+			namespace =
+				this.coreNamespaces.find(ns => ns.prefix === prefix) ||
 				this.generatedNamespaces.find(ns => ns.prefix === prefix);
 		} else if (value) {
-			namespace = this.coreNamespaces.find(ns => valueRegex.test(ns.value)) ||
+			namespace =
+				this.coreNamespaces.find(ns => valueRegex.test(ns.value)) ||
 				this.generatedNamespaces.find(ns => valueRegex.test(ns.value));
 		}
 
@@ -48,8 +55,8 @@ export class NamespaceManager {
 	}
 
 	public registerNamespace(prefix: string, value: string): Namespace {
-		let registered = this.getNamespaceByPrefix(prefix) || this.getNamespaceByValue(value);
-		let newNamespace = new Namespace(prefix, value);
+		const registered = this.getNamespaceByPrefix(prefix) || this.getNamespaceByValue(value);
+		const newNamespace = new Namespace(prefix, value);
 
 		if (registered) {
 			this.coreNamespaces[this.coreNamespaces.indexOf(registered)] = newNamespace;
@@ -62,7 +69,7 @@ export class NamespaceManager {
 
 	public generateNamespace(value: string): Namespace {
 		// Generate namespace prefix with auto incremented id: _ns0, _ns1, _n2..
-		let generatedNamespace = new Namespace(`_ns${this.generatedNamespaces.length}`, value);
+		const generatedNamespace = new Namespace(`_ns${this.generatedNamespaces.length}`, value);
 		this.generatedNamespaces.push(generatedNamespace);
 
 		return generatedNamespace;

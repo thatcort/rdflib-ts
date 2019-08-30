@@ -1,8 +1,3 @@
-import 'mocha';
-import * as chai from 'chai';
-
-let should = chai.should();
-
 import { BlankNode } from '../../../src/model/blank-node';
 import { FormatError } from '../../../src/errors/format-error';
 import { ArgumentError } from '../../../src/errors/argument-error';
@@ -21,11 +16,11 @@ describe('BlankNode - Unit', () => {
 		});
 
 		it('should generate value in form of b plus auto increment if not provided', () => {
-			let blankNode1 = new BlankNode();
-			let blankNode1Id = parseInt(blankNode1.value.replace('b', ''));
+			const blankNode1 = new BlankNode();
+			const blankNode1Id = parseInt(blankNode1.value.replace('b', ''));
 
-			let blankNode2 = new BlankNode();
-			let blankNode2Id = parseInt(blankNode2.value.replace('b', ''));
+			const blankNode2 = new BlankNode();
+			const blankNode2Id = parseInt(blankNode2.value.replace('b', ''));
 
 			blankNode1Id.should.equal(blankNode2Id - 1);
 		});
@@ -37,13 +32,13 @@ describe('BlankNode - Unit', () => {
 
 	context('set value', () => {
 		it('should throw ArgumentError if null, undefined or empty string provided', () => {
-			(() => blankNode.value = null).should.throw(ArgumentError);
-			(() => blankNode.value = undefined).should.throw(ArgumentError);
-			(() => blankNode.value = '').should.throw(ArgumentError);
+			(() => (blankNode.value = null)).should.throw(ArgumentError);
+			(() => (blankNode.value = undefined)).should.throw(ArgumentError);
+			(() => (blankNode.value = '')).should.throw(ArgumentError);
 		});
 
 		it('should throw FormatError if invalid blank node value provided', () => {
-			(() => blankNode.value = 'invalid blank node value').should.throw(FormatError);
+			(() => (blankNode.value = 'invalid blank node value')).should.throw(FormatError);
 		});
 
 		it('should set blank node value if format is correct', () => {
@@ -61,6 +56,6 @@ describe('BlankNode - Unit', () => {
 		it('should append _: at the beginning of blank node value', () => {
 			blankNode.value = 'b1';
 			blankNode.toString().should.equal('_:b1');
-		});		
+		});
 	});
 });

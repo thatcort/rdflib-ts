@@ -5,7 +5,7 @@ import { BlankNode } from '../../model/blank-node';
 import { RdfIOManager } from './rdf-io-manager';
 import { ArgumentError } from '../../errors/argument-error';
 
-export interface IRdfDataImporterOptions {
+export interface RdfDataImporterOptions {
 	importChunkSize?: number;
 	defaultGraph?: IRI;
 	skolemize?: boolean;
@@ -13,20 +13,23 @@ export interface IRdfDataImporterOptions {
 }
 
 export class RdfDataImporter {
-	public options: IRdfDataImporterOptions;
+	public options: RdfDataImporterOptions;
 
-	public constructor(options: IRdfDataImporterOptions = {}) {
+	public constructor(options: RdfDataImporterOptions = {}) {
 		this.options = Object.assign({}, { importChunkSize: 1000, skolemize: false }, options);
 	}
 
-	public async importRdfDataAsync(dataSource: string | NQuad[], targetStore: RdfStore): Promise<void> {
+	public async importRdfDataAsync(
+		dataSource: string | NQuad[],
+		targetStore: RdfStore
+	): Promise<void> {
 		if (!dataSource || !targetStore) {
 			throw new ArgumentError('Data source and target store can not be null or undefined');
 		}
 
-		// If it's string source, let io manager find appropriate parser 
+		// If it's string source, let io manager find appropriate parser
 		if (typeof dataSource === 'string') {
-			let rdfIoManager = new RdfIOManager();
+			const rdfIoManager = new RdfIOManager();
 			dataSource = await rdfIoManager.parseDocumentAsync(dataSource);
 		}
 
@@ -47,11 +50,11 @@ export class RdfDataImporter {
 			dataSource.forEach(quad => quad.skolemize());
 		}
 
-		let scheduledImports: Promise<void>[] = [];
+		const scheduledImports: Promise<void>[] = [];
 
 		// Chunk array and schedule import for every chunk
 		for (let i = 0; i < dataSource.length; i += this.options.importChunkSize) {
-			let chunkForImport = dataSource.slice(i, i + this.options.importChunkSize);
+			const chunkForImport = dataSource.slice(i, i + this.options.importChunkSize);
 			scheduledImports.push(targetStore.importQuadsAsync(chunkForImport));
 		}
 

@@ -4,26 +4,30 @@ import { BlankNode } from '../../model/blank-node';
 import { RdfIOManager } from '../../utils/io/rdf-io-manager';
 import { ArgumentError } from '../../errors/argument-error';
 
-export interface IRdfDataExporterOptions {
+export interface RdfDataExporterOptions {
 	unskolemize?: boolean;
 	blankNodePrefix?: string;
 }
 
 export class RdfDataExporter {
-	public options: IRdfDataExporterOptions;
+	public options: RdfDataExporterOptions;
 
-	public constructor(options: IRdfDataExporterOptions = {}) {
+	public constructor(options: RdfDataExporterOptions = {}) {
 		this.options = Object.assign({}, { unskolemize: false }, options);
 	}
 
-	public async exportRdfDataAsync(dataSource: RdfStore | NQuad[], outSource?: string | RdfStore): Promise<NQuad[]> {
+	public async exportRdfDataAsync(
+		dataSource: RdfStore | NQuad[],
+		outSource?: string | RdfStore
+	): Promise<NQuad[]> {
 		if (!dataSource) {
 			throw new ArgumentError('Can not export null or undefined data source');
 		}
 
 		// If data source is rdf store, export quads from it
-		// otherwise quads are data source itself 
-		let quads: NQuad[] = dataSource instanceof RdfStore ? await dataSource.exportQuadsAsync() : dataSource;
+		// otherwise quads are data source itself
+		const quads: NQuad[] =
+			dataSource instanceof RdfStore ? await dataSource.exportQuadsAsync() : dataSource;
 
 		// Revert blank node replacement if specified in options
 		if (this.options.unskolemize) {
@@ -48,7 +52,7 @@ export class RdfDataExporter {
 		if (outSource instanceof RdfStore) {
 			await outSource.importQuadsAsync(quads);
 		} else if (typeof outSource === 'string') {
-			let rdfIoManager = new RdfIOManager();
+			const rdfIoManager = new RdfIOManager();
 			await rdfIoManager.serializeAsync(quads, outSource);
 		}
 

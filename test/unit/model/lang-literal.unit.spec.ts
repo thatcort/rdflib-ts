@@ -1,8 +1,3 @@
-import 'mocha';
-import * as chai from 'chai';
-
-let should = chai.should();
-
 import { LangLiteral } from '../../../src/model/lang-literal';
 import { ArgumentError } from '../../../src/errors/argument-error';
 import { InvalidOperationError } from '../../../src/errors/invalid-operation-error';
@@ -24,11 +19,19 @@ describe('LangLiteral - Unit', () => {
 			langLiteral.value.should.equal('English lang literal');
 			langLiteral.language.should.equal('en-NZ');
 
-			langLiteral = new LangLiteral({ type: 'literal' , value: 'German lang literal', 'xml:lang': 'de' });
+			langLiteral = new LangLiteral({
+				type: 'literal',
+				value: 'German lang literal',
+				'xml:lang': 'de'
+			});
 			langLiteral.value.should.equal('German lang literal');
 			langLiteral.language.should.equal('de');
 
-			langLiteral = new LangLiteral({ type: 'literal' , value: 'German lang literal', 'xml:lang': 'de-NZ' });
+			langLiteral = new LangLiteral({
+				type: 'literal',
+				value: 'German lang literal',
+				'xml:lang': 'de-NZ'
+			});
 			langLiteral.value.should.equal('German lang literal');
 			langLiteral.language.should.equal('de-NZ');
 		});
@@ -40,17 +43,26 @@ describe('LangLiteral - Unit', () => {
 		});
 
 		it('should throw InvalidOperationError if sparql query result binding provided and its type is literal without xml:lang or with datatype specified', () => {
-			(() => new LangLiteral({ type: 'uri', value: 'b1' })).should.throw(InvalidOperationError);
-			(() => new LangLiteral({ type: 'literal', value: 'b1', datatype: 'xsd:string' })).should.throw(InvalidOperationError);
-			(() => new LangLiteral({ type: 'literal', value: 'b1' })).should.throw(InvalidOperationError);
+			(() => new LangLiteral({ type: 'uri', value: 'b1' })).should.throw(
+				InvalidOperationError
+			);
+			(() =>
+				new LangLiteral({
+					type: 'literal',
+					value: 'b1',
+					datatype: 'xsd:string'
+				})).should.throw(InvalidOperationError);
+			(() => new LangLiteral({ type: 'literal', value: 'b1' })).should.throw(
+				InvalidOperationError
+			);
 		});
 	});
 
 	context('set language', () => {
 		it('should throw ArgumentError if null, undefined or empty string provided', () => {
-			(() => langLiteral.language = null).should.throw(ArgumentError);
-			(() => langLiteral.language = undefined).should.throw(ArgumentError);
-			(() => langLiteral.language = '').should.throw(ArgumentError);
+			(() => (langLiteral.language = null)).should.throw(ArgumentError);
+			(() => (langLiteral.language = undefined)).should.throw(ArgumentError);
+			(() => (langLiteral.language = '')).should.throw(ArgumentError);
 		});
 
 		it('should set language value', () => {
@@ -61,8 +73,8 @@ describe('LangLiteral - Unit', () => {
 
 	context('set value', () => {
 		it('should throw ArgumentError if null or undefined provided', () => {
-			(() => langLiteral.value = null).should.throw(ArgumentError);
-			(() => langLiteral.value = undefined).should.throw(ArgumentError);
+			(() => (langLiteral.value = null)).should.throw(ArgumentError);
+			(() => (langLiteral.value = undefined)).should.throw(ArgumentError);
 		});
 
 		it('should set literal value', () => {
@@ -85,7 +97,7 @@ describe('LangLiteral - Unit', () => {
 	context('toString', () => {
 		it('should return double quoted and escaped literal value with language tag', () => {
 			langLiteral.value = '"^\\d{3}-\\d{2}-\\d{4}$"@de';
-			langLiteral.toString().should.equal('"^\\\\d{3}-\\\\d{2}-\\\\d{4}$"@de')
+			langLiteral.toString().should.equal('"^\\\\d{3}-\\\\d{2}-\\\\d{4}$"@de');
 		});
 	});
 });

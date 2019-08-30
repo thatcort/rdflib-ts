@@ -1,10 +1,5 @@
-import 'mocha';
-import * as chai from 'chai';
 import * as sinon from 'sinon';
-import * as chaiAsPromised from 'chai-as-promised';
-
-chai.use(chaiAsPromised);
-chai.should();
+import * as path from 'path';
 
 import * as fs from 'fs';
 
@@ -12,14 +7,15 @@ import { Server } from 'net';
 import { TestHelper } from '../../helpers/test-helper';
 import { JsonLDParser } from '../../../src/parsers/jsonld-parser';
 
-process.env.LOCALHOST = process.env.DOCKERHOST || 'localhost';
-
 describe('JsonLDParser - Integration', () => {
-	let parser = new JsonLDParser();
+	const parser = new JsonLDParser();
 	let staticFileServer: Server;
 
 	before(async () => {
-		staticFileServer = await TestHelper.startStaticFileServerAsync('test/datasets/jsonld', 3033);
+		staticFileServer = await TestHelper.startStaticFileServerAsync(
+			path.join(__dirname, '../../datasets/jsonld'),
+			3033
+		);
 	});
 
 	after(async () => {
@@ -27,8 +23,12 @@ describe('JsonLDParser - Integration', () => {
 	});
 
 	it('should be able to load and parse local jsonld file', () => {
-		let testCase1Promise = parser.parseDocumentAsync('test/datasets/jsonld/jsonldparser_testcase1_10quads.json');
-		let testCase2Promise = parser.parseDocumentAsync('test/datasets/jsonld/jsonldparser_testcase2_21quads.json');
+		const testCase1Promise = parser.parseDocumentAsync(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase1_10quads.json')
+		);
+		const testCase2Promise = parser.parseDocumentAsync(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase2_21quads.json')
+		);
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
@@ -42,11 +42,15 @@ describe('JsonLDParser - Integration', () => {
 	});
 
 	it('should be able to load and parse jsonld readable stream', () => {
-		let testCase1Stream = fs.createReadStream('test/datasets/jsonld/jsonldparser_testcase1_10quads.json');
-		let testCase2Stream = fs.createReadStream('test/datasets/jsonld/jsonldparser_testcase2_21quads.json');
+		const testCase1Stream = fs.createReadStream(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase1_10quads.json')
+		);
+		const testCase2Stream = fs.createReadStream(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase2_21quads.json')
+		);
 
-		let testCase1Promise = parser.parseDocumentAsync(testCase1Stream);
-		let testCase2Promise = parser.parseDocumentAsync(testCase2Stream);
+		const testCase1Promise = parser.parseDocumentAsync(testCase1Stream);
+		const testCase2Promise = parser.parseDocumentAsync(testCase2Stream);
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
@@ -60,11 +64,17 @@ describe('JsonLDParser - Integration', () => {
 	});
 
 	it('should be able to load and parse jsonld string', () => {
-		let testCase1String = fs.readFileSync('test/datasets/jsonld/jsonldparser_testcase1_10quads.json', 'utf-8');
-		let testCase2String = fs.readFileSync('test/datasets/jsonld/jsonldparser_testcase2_21quads.json', 'utf-8');
+		const testCase1String = fs.readFileSync(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase1_10quads.json'),
+			'utf-8'
+		);
+		const testCase2String = fs.readFileSync(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase2_21quads.json'),
+			'utf-8'
+		);
 
-		let testCase1Promise = parser.parseDocumentAsync(testCase1String);
-		let testCase2Promise = parser.parseDocumentAsync(testCase2String);
+		const testCase1Promise = parser.parseDocumentAsync(testCase1String);
+		const testCase2Promise = parser.parseDocumentAsync(testCase2String);
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
@@ -77,9 +87,13 @@ describe('JsonLDParser - Integration', () => {
 		]);
 	});
 
-	it('should be able to load and parse remote jsonld file over http protocol', () => {		
-		let testCase1Promise = parser.parseDocumentAsync(`http://${process.env.LOCALHOST}:3033/jsonldparser_testcase1_10quads.json`);
-		let testCase2Promise = parser.parseDocumentAsync(`http://${process.env.LOCALHOST}:3033/jsonldparser_testcase2_21quads.json`);
+	it('should be able to load and parse remote jsonld file over http protocol', () => {
+		const testCase1Promise = parser.parseDocumentAsync(
+			`http://localhost:3033/jsonldparser_testcase1_10quads.json`
+		);
+		const testCase2Promise = parser.parseDocumentAsync(
+			`http://localhost:3033/jsonldparser_testcase2_21quads.json`
+		);
 
 		return Promise.all([
 			testCase1Promise.should.be.fulfilled,
@@ -93,19 +107,28 @@ describe('JsonLDParser - Integration', () => {
 	});
 
 	it('should invoke quad handler if specified', async () => {
-		let handlerSpy = sinon.spy();
-		await parser.parseDocumentAsync('test/datasets/jsonld/jsonldparser_testcase1_10quads.json', handlerSpy);
+		const handlerSpy = sinon.spy();
+		await parser.parseDocumentAsync(
+			path.join(__dirname, '../../datasets/jsonld/jsonldparser_testcase1_10quads.json'),
+			handlerSpy
+		);
 
 		handlerSpy.called.should.be.true;
 		handlerSpy.callCount.should.be.equal(10);
 	});
 
 	it('should reject if invalid input provided (file does not exist, remote file does not exist, invalid json format', () => {
-		let testCase1Promise = parser.parseDocumentAsync('http://localhost:3053/unknownfile.json');
-		let testCase2Promise = parser.parseDocumentAsync('test/datasets/jsonld/unknownfile.json');
-		let testCase3Promise = parser.parseDocumentAsync(fs.createReadStream('non existing file.json'));
-		let testCase4Promise = parser.parseDocumentAsync('rdf": "http:\\www.w3.org\\1999\\02\\22-rdf-syntax-ns#",\r\n    "rdfs');
-		let testCase5Promise = parser.parseDocumentAsync(null);
+		const testCase1Promise = parser.parseDocumentAsync(
+			'http://localhost:3053/unknownfile.json'
+		);
+		const testCase2Promise = parser.parseDocumentAsync('test/datasets/jsonld/unknownfile.json');
+		const testCase3Promise = parser.parseDocumentAsync(
+			fs.createReadStream('non existing file.json')
+		);
+		const testCase4Promise = parser.parseDocumentAsync(
+			'rdf": "http:\\www.w3.org\\1999\\02\\22-rdf-syntax-ns#",\r\n    "rdfs'
+		);
+		const testCase5Promise = parser.parseDocumentAsync(null);
 
 		return Promise.all([
 			testCase1Promise.should.be.rejected,

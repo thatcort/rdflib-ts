@@ -1,21 +1,24 @@
 import { IRI } from './iri';
-import { RdfUtils } from '../utils/rdf/rdf-utils';
-import { Namespace } from './namespace';
 import { BlankNode } from './blank-node';
 import { LangLiteral } from './lang-literal';
 import { PlainLiteral } from './plain-literal';
 import { TypedLiteral } from './typed-literal';
 import { ArgumentError } from '../errors/argument-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
-import { ISparqlQueryResultBinding } from './sparql-query-result';
-import { RdfObject, RdfPredicate, RdfSubject, RdfTerm } from './rdf-core-types';
+import { SparqlQueryResultBinding } from './sparql-query-result';
+import { RdfObject, RdfPredicate, RdfSubject } from './rdf-core-types';
+import { RdfUtils } from '../utils/rdf/rdf-utils';
 
 export class NTriple {
 	protected _subject: RdfSubject;
 	protected _predicate: RdfPredicate;
 	protected _object: RdfObject;
 
-	public constructor(subject: string | RdfSubject | ISparqlQueryResultBinding, predicate: string | RdfPredicate | ISparqlQueryResultBinding, object: string | RdfObject | ISparqlQueryResultBinding) {
+	public constructor(
+		subject: string | RdfSubject | SparqlQueryResultBinding,
+		predicate: string | RdfPredicate | SparqlQueryResultBinding,
+		object: string | RdfObject | SparqlQueryResultBinding
+	) {
 		this.subject = this.resolveSubject(subject);
 		this.predicate = this.resolvePredicate(predicate);
 		this.object = this.resolveObject(object);
@@ -69,11 +72,11 @@ export class NTriple {
 
 	public unskolemize(): void {
 		if (RdfUtils.isSkolemIRI(this.subject.value)) {
-			this.subject = new BlankNode((<IRI>this.subject).relativeValue);
+			this.subject = new BlankNode((this.subject as IRI).relativeValue);
 		}
 
 		if (RdfUtils.isSkolemIRI(this.object.value)) {
-			this.object = new BlankNode((<IRI>this.object).relativeValue);
+			this.object = new BlankNode((this.object as IRI).relativeValue);
 		}
 	}
 
@@ -81,7 +84,7 @@ export class NTriple {
 		return `${this.subject} ${this.predicate} ${this.object} .`;
 	}
 
-	private resolveSubject(value: string | RdfSubject | ISparqlQueryResultBinding): RdfSubject {
+	private resolveSubject(value: string | RdfSubject | SparqlQueryResultBinding): RdfSubject {
 		if (!value) {
 			throw new ArgumentError('IRI value can not be null, undefined or empty string');
 		}
@@ -107,7 +110,9 @@ export class NTriple {
 		return value;
 	}
 
-	private resolvePredicate(value: string | RdfPredicate | ISparqlQueryResultBinding): RdfPredicate {
+	private resolvePredicate(
+		value: string | RdfPredicate | SparqlQueryResultBinding
+	): RdfPredicate {
 		if (!value) {
 			throw new ArgumentError('IRI value can not be null, undefined or empty string');
 		}
@@ -131,11 +136,11 @@ export class NTriple {
 		return value;
 	}
 
-	private resolveObject(value: string | RdfObject | ISparqlQueryResultBinding): RdfObject {
+	private resolveObject(value: string | RdfObject | SparqlQueryResultBinding): RdfObject {
 		if (!value) {
 			throw new ArgumentError('IRI value can not be null, undefined or empty string');
 		}
-		
+
 		if (RdfUtils.isSparqlResultBinding(value)) {
 			if (value.type === 'literal' || value.type == 'typed-literal') {
 				if (value.datatype) {

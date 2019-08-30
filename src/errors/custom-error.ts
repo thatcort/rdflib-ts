@@ -16,20 +16,22 @@ export abstract class CustomError extends Error {
 	}
 
 	private setFullErrorMessage(error?: string | Error) {
-		let errorMessageBuilder = [];
+		const errorMessageBuilder = [];
 
 		if (typeof error === 'string') {
 			errorMessageBuilder.push(error);
 		}
 
-		// Go through inner error chain and push 
+		// Go through inner error chain and push
 		// error messages in string builder array
 		// in form of "message (error name)"
 		let currentError: any = this.innerError;
 		while (currentError) {
 			if (currentError.message) {
-				let errName = currentError.constructor.name;
-				let errMessage = currentError.originalMessage ? currentError.originalMessage : currentError.message;
+				const errName = currentError.constructor.name;
+				const errMessage = currentError.originalMessage
+					? currentError.originalMessage
+					: currentError.message;
 
 				errorMessageBuilder.push(`${errMessage} (${errName})`);
 			}
@@ -38,7 +40,7 @@ export abstract class CustomError extends Error {
 		}
 
 		// Concatenate all found messages with dot and space
-		let errorMessage = errorMessageBuilder.join('. ');
+		const errorMessage = errorMessageBuilder.join('. ');
 		if (errorMessage !== '') {
 			this.message = `${this.constructor.name}: ${errorMessage}`;
 		} else {

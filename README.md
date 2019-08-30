@@ -195,7 +195,7 @@ console.log(quad.toString()); // _:b1 <http://example.org#knows> _:b2 .
 ```
 
 ##### Parsing/Serializing data
-RDFLib.ts provides `RdfIOManager` class which can be used to parse or serialize RDF data. Currently supported formats are Turtle family formats (.nt, .nq, ttl, trig) which are handled with https://github.com/RubenVerborgh/N3.js library, and JsonLD format handled with https://github.com/digitalbazaar/jsonld.js/ library. Support for RDF/XML will be added later. If you need to handle custom format, appropriate parser/serializer can be registered using `RdfIOManager.registerParser(extension: string, parser: IRdfDocumentParser)` and `RdfIOManager.registerSerializer(extension: string, serializer: IRdfDataSerializer)` methods. If target format is supported, parsing and serialization can be done using `RdfIOManager.parseDocumentAsync(filePath: string, quadHandler?: (quad: NQuad) => void)` and `RdfIOManager.serializeAsync(quads: NQuad[], outFilePath: string)` methods. Both methods are asynchronous and promise based. `quadHandler?: (quad: NQuad) => void` is optional callback function which (if provided), gets called after each parsed quad.  
+RDFLib.ts provides `RdfIOManager` class which can be used to parse or serialize RDF data. Currently supported formats are Turtle family formats (.nt, .nq, ttl, trig) which are handled with https://github.com/RubenVerborgh/N3.js library, and JsonLD format handled with https://github.com/digitalbazaar/jsonld.js/ library. Support for RDF/XML will be added later. If you need to handle custom format, appropriate parser/serializer can be registered using `RdfIOManager.registerParser(extension: string, parser: RdfDocumentParser)` and `RdfIOManager.registerSerializer(extension: string, serializer: RdfDataSerializer)` methods. If target format is supported, parsing and serialization can be done using `RdfIOManager.parseDocumentAsync(filePath: string, quadHandler?: (quad: NQuad) => void)` and `RdfIOManager.serializeAsync(quads: NQuad[], outFilePath: string)` methods. Both methods are asynchronous and promise based. `quadHandler?: (quad: NQuad) => void` is optional callback function which (if provided), gets called after each parsed quad.  
 Supported inputs are valid Turtle or JsonLD string, local file, readable stream, or remote file.
 
 ###### Example 1: Parsing and serializing with different formats
@@ -235,10 +235,10 @@ let remoteEndpoint = new RemoteSparqlEndpoint('TestStore', 'http://localhost:303
 try {
 	await remoteEndpoint.importQuadsAsync([new NQuad('ex:Alice', 'ex:knows', 'ex:Bob')]);
 
-	// Interface ISparqlQueryResult<IQuadQueryResult> can be used for intellisense
-	// ISparqlQueryResult format is defined in https://www.w3.org/TR/sparql11-results-json/
-	// IQuadQueryResult defines shape of one binding, matches variables returned by query
-	let queryResult: ISparqlQueryResult<IQuadQueryResult> = await remoteEndpoint.queryAsync<IQuadQueryResult>('SELECT * WHERE { ?subject ?predicate ?object }');
+	// Interface SparqlQueryResult<QuadQueryResult> can be used for intellisense
+	// SparqlQueryResult format is defined in https://www.w3.org/TR/sparql11-results-json/
+	// QuadQueryResult defines shape of one binding, matches variables returned by query
+	let queryResult: SparqlQueryResult<QuadQueryResult> = await remoteEndpoint.queryAsync<QuadQueryResult>('SELECT * WHERE { ?subject ?predicate ?object }');
 
 	// There is only one result, previously imported
 	for (let result of queryResult.results.bindings) {
@@ -352,8 +352,7 @@ try {
 ## Testing
 ---
 
-To run all tests, run `npm test` command. Different tests can be run separately with `npm run test:unit`, `npm run test:integration` and `npm run test:e2e` commands. 
-
+To run all tests, run `yarn test` command.
 
 License
 ----

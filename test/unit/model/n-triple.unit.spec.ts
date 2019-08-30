@@ -1,8 +1,3 @@
-import 'mocha';
-import * as chai from 'chai';
-
-let should = chai.should();
-
 import { IRI } from '../../../src/model/iri';
 import { NTriple } from '../../../src/model/n-triple';
 import { BlankNode } from '../../../src/model/blank-node';
@@ -17,47 +12,82 @@ describe('NTriple - Unit', () => {
 
 	context('constructor', () => {
 		it('should set subject, predicate and object properties', () => {
-			triple = new NTriple(new BlankNode(), 'rdf:knows', { type: 'literal', value: 'Literal', 'xml:lang': 'en' });
+			triple = new NTriple(new BlankNode(), 'rdf:knows', {
+				type: 'literal',
+				value: 'Literal',
+				'xml:lang': 'en'
+			});
 			triple.subject.should.be.instanceof(BlankNode);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(LangLiteral);
 
-			triple = new NTriple('_:b1', 'rdf:knows', { type: 'literal', value: 'Literal', 'xml:lang': 'en' });
+			triple = new NTriple('_:b1', 'rdf:knows', {
+				type: 'literal',
+				value: 'Literal',
+				'xml:lang': 'en'
+			});
 			triple.subject.should.be.instanceof(BlankNode);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(LangLiteral);
 
-			triple = new NTriple({ type: 'bnode', value: 'b1' }, 'rdf:knows', { type: 'literal', value: 'Literal', 'xml:lang': 'en' });
+			triple = new NTriple({ type: 'bnode', value: 'b1' }, 'rdf:knows', {
+				type: 'literal',
+				value: 'Literal',
+				'xml:lang': 'en'
+			});
 			triple.subject.should.be.instanceof(BlankNode);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(LangLiteral);
 
-			triple = new NTriple({ type: 'uri', value: 'rdf:Alice' }, 'rdf:knows', { type: 'literal', value: 'Literal', 'xml:lang': 'en' });
+			triple = new NTriple({ type: 'uri', value: 'rdf:Alice' }, 'rdf:knows', {
+				type: 'literal',
+				value: 'Literal',
+				'xml:lang': 'en'
+			});
 			triple.subject.should.be.instanceof(IRI);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(LangLiteral);
 
-			triple = new NTriple({ type: 'uri', value: 'rdf:Alice' }, new IRI('rdf:knows'), { type: 'literal', value: 'Literal', 'xml:lang': 'en' });
+			triple = new NTriple({ type: 'uri', value: 'rdf:Alice' }, new IRI('rdf:knows'), {
+				type: 'literal',
+				value: 'Literal',
+				'xml:lang': 'en'
+			});
 			triple.subject.should.be.instanceof(IRI);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(LangLiteral);
 
-			triple = new NTriple({ type: 'uri', value: 'rdf:Alice' }, { type: 'uri', value: 'rdf:Alice' }, { type: 'literal', value: 'Literal', 'xml:lang': 'en' });
+			triple = new NTriple(
+				{ type: 'uri', value: 'rdf:Alice' },
+				{ type: 'uri', value: 'rdf:Alice' },
+				{ type: 'literal', value: 'Literal', 'xml:lang': 'en' }
+			);
 			triple.subject.should.be.instanceof(IRI);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(LangLiteral);
 
-			triple = new NTriple(new IRI('rdf:Alice'), 'rdf:knows', { type: 'literal', value: 'Literal', datatype: 'xsd:string' });
+			triple = new NTriple(new IRI('rdf:Alice'), 'rdf:knows', {
+				type: 'literal',
+				value: 'Literal',
+				datatype: 'xsd:string'
+			});
 			triple.subject.should.be.instanceof(IRI);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(TypedLiteral);
 
-			triple = new NTriple(new BlankNode(), 'rdf:knows', { type: 'typed-literal', value: 'Literal', datatype: 'xsd:string' });
+			triple = new NTriple(new BlankNode(), 'rdf:knows', {
+				type: 'typed-literal',
+				value: 'Literal',
+				datatype: 'xsd:string'
+			});
 			triple.subject.should.be.instanceof(BlankNode);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(TypedLiteral);
 
-			triple = new NTriple(new BlankNode(), 'rdf:knows', { type: 'literal', value: 'Literal' });
+			triple = new NTriple(new BlankNode(), 'rdf:knows', {
+				type: 'literal',
+				value: 'Literal'
+			});
 			triple.subject.should.be.instanceof(BlankNode);
 			triple.predicate.should.be.instanceof(IRI);
 			triple.object.should.be.instanceof(PlainLiteral);
@@ -99,18 +129,37 @@ describe('NTriple - Unit', () => {
 		});
 
 		it('should throw InvalidOperation error if specified invalid subject, object, or predicate value', () => {
-			(() => new NTriple('"literal"', '_:b1', { type: 'bnode', value: 'b2' })).should.throw(InvalidOperationError);
-			(() => new NTriple(new BlankNode(), '_:b1', { type: 'bnode', value: 'b2' })).should.throw(InvalidOperationError);
-			(() => new NTriple({ type: 'literal', value: 'Literal', datatype: 'xsd:string' }, '_:b1', { type: 'bnode', value: 'b2' })).should.throw(InvalidOperationError);
-			(() => new NTriple({ type: 'typed-literal', value: 'Literal', datatype: 'xsd:string' }, '_:b1', { type: 'bnode', value: 'b2' })).should.throw(InvalidOperationError);
-			(() => new NTriple(new BlankNode(), { type: 'bnode', value: 'b2' }, { type: 'bnode', value: 'b2' })).should.throw(InvalidOperationError);
+			(() => new NTriple('"literal"', '_:b1', { type: 'bnode', value: 'b2' })).should.throw(
+				InvalidOperationError
+			);
+			(() =>
+				new NTriple(new BlankNode(), '_:b1', { type: 'bnode', value: 'b2' })).should.throw(
+				InvalidOperationError
+			);
+			(() =>
+				new NTriple({ type: 'literal', value: 'Literal', datatype: 'xsd:string' }, '_:b1', {
+					type: 'bnode',
+					value: 'b2'
+				})).should.throw(InvalidOperationError);
+			(() =>
+				new NTriple(
+					{ type: 'typed-literal', value: 'Literal', datatype: 'xsd:string' },
+					'_:b1',
+					{ type: 'bnode', value: 'b2' }
+				)).should.throw(InvalidOperationError);
+			(() =>
+				new NTriple(
+					new BlankNode(),
+					{ type: 'bnode', value: 'b2' },
+					{ type: 'bnode', value: 'b2' }
+				)).should.throw(InvalidOperationError);
 		});
 	});
 
 	context('set subject', () => {
 		it('should throw ArgumentError if null or undefined', () => {
-			(() => triple.subject = null).should.throw(ArgumentError);
-			(() => triple.subject = undefined).should.throw(ArgumentError);
+			(() => (triple.subject = null)).should.throw(ArgumentError);
+			(() => (triple.subject = undefined)).should.throw(ArgumentError);
 		});
 
 		it('should set subject value', () => {
@@ -121,8 +170,8 @@ describe('NTriple - Unit', () => {
 
 	context('set predicate', () => {
 		it('should throw ArgumentError if null or undefined', () => {
-			(() => triple.predicate = null).should.throw(ArgumentError);
-			(() => triple.predicate = undefined).should.throw(ArgumentError);
+			(() => (triple.predicate = null)).should.throw(ArgumentError);
+			(() => (triple.predicate = undefined)).should.throw(ArgumentError);
 		});
 
 		it('should set predicate value', () => {
@@ -133,8 +182,8 @@ describe('NTriple - Unit', () => {
 
 	context('set object', () => {
 		it('should throw ArgumentError if null or undefined', () => {
-			(() => triple.object = null).should.throw(ArgumentError);
-			(() => triple.object = undefined).should.throw(ArgumentError);
+			(() => (triple.object = null)).should.throw(ArgumentError);
+			(() => (triple.object = undefined)).should.throw(ArgumentError);
 		});
 
 		it('should set object value', () => {
@@ -154,7 +203,11 @@ describe('NTriple - Unit', () => {
 			triple.object.should.be.instanceof(IRI);
 			triple.object.value.should.equal(new IRI('skolem:b2').value);
 
-			triple = new NTriple('http://example.org#Bob', 'http://example.org#knows', 'http://example.org#Alice');
+			triple = new NTriple(
+				'http://example.org#Bob',
+				'http://example.org#knows',
+				'http://example.org#Alice'
+			);
 			triple.skolemize();
 
 			triple.subject.should.be.instanceof(IRI);
@@ -177,7 +230,11 @@ describe('NTriple - Unit', () => {
 			triple.object.should.be.instanceof(BlankNode);
 			triple.object.value.should.equal('b2');
 
-			triple = new NTriple('http://example.org#Bob', 'http://example.org#knows', 'http://example.org#Alice');
+			triple = new NTriple(
+				'http://example.org#Bob',
+				'http://example.org#knows',
+				'http://example.org#Alice'
+			);
 			triple.skolemize();
 			triple.unskolemize();
 
@@ -186,7 +243,7 @@ describe('NTriple - Unit', () => {
 
 			triple.object.should.be.instanceof(IRI);
 			triple.object.value.should.equal('http://example.org#Alice');
-		});	
+		});
 	});
 
 	context('toString()', () => {

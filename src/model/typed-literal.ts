@@ -4,18 +4,18 @@ import { XsdStringIRI } from './constants';
 import { PlainLiteral } from './plain-literal';
 import { ArgumentError } from '../errors/argument-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
-import { ISparqlQueryResultBinding } from './sparql-query-result';
+import { SparqlQueryResultBinding } from './sparql-query-result';
 
 export class TypedLiteral extends PlainLiteral {
 	private _dataType: IRI;
 
-	public constructor(value: string | ISparqlQueryResultBinding, dataType?: string | IRI) {
+	public constructor(value: string | SparqlQueryResultBinding, dataType?: string | IRI) {
 		super(value);
 
 		if (dataType && typeof dataType === 'string') {
 			this.dataType = new IRI(dataType);
 		} else {
-			this.dataType = dataType as IRI || this.dataType || XsdStringIRI;
+			this.dataType = (dataType as IRI) || this.dataType || XsdStringIRI;
 		}
 	}
 
@@ -40,7 +40,7 @@ export class TypedLiteral extends PlainLiteral {
 			throw new ArgumentError('Literal value can not be null or undefined');
 		}
 
-		let [plain, dataType] = value.split('"^^');
+		const [plain, dataType] = value.split('"^^');
 
 		super.value = plain;
 		if (dataType) {
@@ -52,14 +52,20 @@ export class TypedLiteral extends PlainLiteral {
 		return `${super.toString()}^^${this.dataType.toString()}`;
 	}
 
-	protected resolveLiteralValue(value: string | ISparqlQueryResultBinding): string {
+	protected resolveLiteralValue(value: string | SparqlQueryResultBinding): string {
 		if (!value) {
 			throw new ArgumentError('IRI value can not be null, undefined or empty string');
 		}
-		
+
 		if (RdfUtils.isSparqlResultBinding(value)) {
-			if ((value.type !== 'literal' && value.type !== 'typed-literal') || !value.datatype || !!value['xml:lang']) {
-				throw new InvalidOperationError(`Can not create typed literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`);
+			if (
+				(value.type !== 'literal' && value.type !== 'typed-literal') ||
+				!value.datatype ||
+				!!value['xml:lang']
+			) {
+				throw new InvalidOperationError(
+					`Can not create typed literal from sparql query result binding with type: '${value.type}' (lang: '${value['xml:lang']}, dataType: '${value.datatype}'`
+				);
 			}
 
 			this.dataType = new IRI(value.datatype);

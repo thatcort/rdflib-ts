@@ -10,19 +10,18 @@ import { ArgumentError } from '../errors/argument-error';
 import { InvalidOperationError } from '../errors/invalid-operation-error';
 import { NamespaceManagerInstance } from '../utils/rdf/namespace-manager';
 
-export interface IRdfDataSerializer {
+export interface RdfDataSerializer {
 	serializeAsync(quads: NQuad[], output: string | WriteStream): Promise<void>;
 }
 
-export interface IRdfDataSerializerOptions {
+export interface RdfDataSerializerOptions {
 	skipUnusedNamespaces?: boolean;
 }
 
-export abstract class RdfDataSerializer implements IRdfDataSerializer {
+export abstract class BaseRdfDataSerializer implements RdfDataSerializer {
+	public options: RdfDataSerializerOptions;
 
-	public options: IRdfDataSerializerOptions;
-
-	public constructor(options: IRdfDataSerializerOptions = {}) {
+	public constructor(options: RdfDataSerializerOptions = {}) {
 		this.options = Object.assign({}, { skipUnusedNamespaces: true }, options);
 	}
 
@@ -30,21 +29,29 @@ export abstract class RdfDataSerializer implements IRdfDataSerializer {
 
 	protected buildContext(quads: NQuad[]): any {
 		if (!quads) {
-			throw new ArgumentError('Can not build serialization context from null or undefined quad array');
+			throw new ArgumentError(
+				'Can not build serialization context from null or undefined quad array'
+			);
 		}
 
-		let context = {};
+		const context = {};
 		let namespaces = NamespaceManagerInstance.getAllNamespaces();
 
 		// Filter namespaces by value used in any of quads
 		// This option can have impact on performance if dataset is large
 		if (this.options.skipUnusedNamespaces) {
-			namespaces = namespaces.filter(n => quads
-				.some(q => q.subject.value.indexOf(n.value) != -1 || q.predicate.value.indexOf(n.value) != -1 ||
-					q.object.toString().indexOf(n.value) != -1 || (q.graph && q.graph.value.indexOf(n.value) != -1)))
+			namespaces = namespaces.filter(n =>
+				quads.some(
+					q =>
+						q.subject.value.indexOf(n.value) != -1 ||
+						q.predicate.value.indexOf(n.value) != -1 ||
+						q.object.toString().indexOf(n.value) != -1 ||
+						(q.graph && q.graph.value.indexOf(n.value) != -1)
+				)
+			);
 		}
 
-		for (let namespace of namespaces) {
+		for (const namespace of namespaces) {
 			context[namespace.prefix] = namespace.value;
 		}
 
@@ -56,14 +63,14 @@ export abstract class RdfDataSerializer implements IRdfDataSerializer {
 		}
 
 		// Resolve target file path and it's directory
-		let filePath = typeof output === 'string' ? output : <string>output.path;
-		let dirname = path.dirname(filePath);
+		const filePath = typeof output === 'string' ? output : (output.path as string);
+		const dirname = path.dirname(filePath);
 
 		// stats function will throw ENOENT error
 		// if directory not exists, which is handled by creating directory
 		// if any other error occurs, rethrow it as InvalidOperationError
 		try {
-			let stats = await fs.statAsync(dirname);
+			await fs.statAsync(dirname);
 		} catch (err) {
 			if (err.code === 'ENOENT') {
 				await mkdirp.mkdirpAsync(dirname);

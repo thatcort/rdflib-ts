@@ -1,10 +1,3 @@
-import 'mocha';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-
-chai.use(chaiAsPromised);
-chai.should();
-
 import { RdfDataExporter } from '../../../../src/utils/io/rdf-data-exporter';
 
 describe('RdfDataExporter - Unit', () => {
