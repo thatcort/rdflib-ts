@@ -3,7 +3,7 @@
 	"version": "1.2.57",
 	"author": "Vladimir Djurdjevic <vladimirdjurdjevic93@gmail.com>",
 	"license": "MIT",
-	"description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support",
+	"description": "Typescript implementation of basic RDF model, utils and rdf store with SPARQL 1.1 support.",
 	"keywords": [
 		"rdf",
 		"sparql",
@@ -49,5 +49,6 @@
 		"@dry-stack/devtools": "1.2.58",
 		"@dry-stack/testing": "1.2.57",
 		"express": "4.17.1"
-	}
+	},
+	"gitHead": "fcc2ef8615d159a076015bed7083bd254221d78a"
 }
