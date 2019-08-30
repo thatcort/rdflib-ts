@@ -37,7 +37,7 @@
 		"superagent": "5.1.0"
 	},
 	"devDependencies": {
-		"@dry-stack/devtools": "2.0.2",
+		"@dry-stack/devtools": "2.0.4",
 		"@dry-stack/testing": "2.0.2",
 		"express": "4.17.1"
 	},
