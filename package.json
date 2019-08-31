@@ -26,7 +26,7 @@
 		"rebuild": "yarn run clean && yarn run build",
 		"prepublish": "yarn run lint && yarn run test:unit && yarn run rebuild",
 		"start:fuseki": "docker run -p 3030:3030 -e ADMIN_PASSWORD=pass123 stain/jena-fuseki:2.5.0",
-		"start:tests": "mocha \"test/**/*.spec.ts\"",
+		"start:tests": "env-cmd -f ./.env/qa.env mocha \"test/**/*.spec.ts\"",
 		"test": "concurrently -s first -k -n Fuseki,Tests \"yarn run start:fuseki\" \"wait-port 3030 && yarn run start:tests\""
 	},
 	"dependencies": {
@@ -37,7 +37,7 @@
 		"superagent": "5.1.0"
 	},
 	"devDependencies": {
-		"@dry-stack/devtools": "2.0.4",
+		"@dry-stack/devtools": "2.0.5",
 		"@dry-stack/testing": "2.0.2",
 		"express": "4.17.1"
 	},
