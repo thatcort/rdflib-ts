@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@dry-stack/devtools": "2.0.5",
-		"@dry-stack/testing": "2.0.2",
+		"@dry-stack/testing": "2.0.7",
 		"express": "4.17.1"
 	},
 	"gitHead": "fcc2ef8615d159a076015bed7083bd254221d78a"
